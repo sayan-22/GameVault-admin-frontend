@@ -1,26 +1,204 @@
 @import "tailwindcss";
 
+@theme {
+  /* Background scale */
+  --color-bg-base: #121212;
+  --color-bg-nav: #181818;
+  --color-bg-card: #1f1f1f;
+  --color-bg-elevated: #1e1e1e;
+  --color-bg-sidebar: #111111;
+
+  /* Text */
+  --color-text-primary: #ececec;
+  --color-text-secondary: #b8c1cc;
+  --color-text-muted: #8b949e;
+
+  /* Cyan accent */
+  --color-accent: #00d9ff;
+  --color-accent-soft: #4c807e;
+  --color-accent-glow: #21c7e5;
+  --color-accent-border: #214a52;
+
+  /* Success */
+  --color-success: #00c16a;
+  --color-success-light: #36e28a;
+
+  /* Danger */
+  --color-danger: #ff5a5f;
+  --color-danger-soft: #b23a48;
+
+  /* Borders */
+  --color-border-card: #2a2a2a;
+  --color-border-soft: #2f2f2f;
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+
+  /* Shadows */
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-lift: 0 12px 32px rgba(0, 0, 0, 0.55);
+  --shadow-glow: 0 0 0 1px rgba(0, 217, 255, 0.35), 0 8px 32px rgba(0, 217, 255, 0.18);
+
+  /* Fonts (variables injected by next/font in layout.tsx) */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-jakarta), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html,
+body {
+  background: var(--color-bg-base);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Scrollbar — quiet, cyan on hover */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg-base);
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent-soft);
+}
+
+/* Selection */
+::selection {
+  background: rgba(0, 217, 255, 0.35);
+  color: #fff;
+}
+
+/* === Animations === */
+
+/* Scroll-reveal — applied via .reveal class; IntersectionObserver adds .in-view */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 600ms ease-out, transform 600ms ease-out;
+  will-change: opacity, transform;
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hover-lift utility — apply to any card */
+.hover-lift {
+  transition: transform 250ms ease, box-shadow 250ms ease, border-color 250ms ease;
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lift);
+}
+
+/* Card glow on hover */
+.card-glow {
+  transition: box-shadow 280ms ease, border-color 280ms ease, transform 280ms ease;
+}
+.card-glow:hover {
+  border-color: var(--color-accent-border);
+  box-shadow: var(--shadow-glow);
+}
+
+/* Skeleton shimmer */
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
   }
 }
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #1f1f1f 0%,
+    #262626 40%,
+    #2a2a2a 50%,
+    #262626 60%,
+    #1f1f1f 100%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.4s linear infinite;
+  border-radius: var(--radius-md);
+}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Subtle floating glow for hero/empty-state badges */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 217, 255, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(0, 217, 255, 0);
+  }
+}
+.pulse-glow {
+  animation: pulse-glow 2.2s ease-out infinite;
+}
+
+/* Popover animation */
+@keyframes popover-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.popover-panel {
+  animation: popover-in 180ms ease-out;
+}
+
+/* Modal animations */
+@keyframes modal-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.modal-backdrop {
+  animation: modal-fade 180ms ease-out;
+}
+.modal-panel {
+  animation: modal-in 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .hover-lift,
+  .card-glow,
+  .skeleton,
+  .pulse-glow,
+  .popover-panel,
+  .modal-backdrop,
+  .modal-panel {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
 }
