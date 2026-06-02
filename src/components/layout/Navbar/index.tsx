@@ -124,10 +124,14 @@ function MobileMenu({
 export default function Navbar() {
   const pathname = usePathname() ?? "/";
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [prevPath, setPrevPath] = useState(pathname);
 
-  useEffect(() => {
+  // Close the mobile menu on navigation — adjust state during render rather
+  // than in an effect (React's recommended pattern for prop-driven resets).
+  if (pathname !== prevPath) {
+    setPrevPath(pathname);
     setMobileOpen(false);
-  }, [pathname]);
+  }
 
   useEffect(() => {
     if (!mobileOpen) return;

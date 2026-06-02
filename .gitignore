@@ -24,6 +24,9 @@
 .DS_Store
 *.pem
 
+# OneNote table-of-contents junk (auto-created by OneNote; corrupts Turbopack cache)
+*.onetoc2
+
 # debug
 npm-debug.log*
 yarn-debug.log*

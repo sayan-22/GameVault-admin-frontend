@@ -3,35 +3,46 @@ import PageHeader from "@/src/components/layout/PageHeader";
 import PrimaryButton from "@/src/components/buttons/PrimaryButton";
 import GhostButton from "@/src/components/buttons/GhostButton";
 import StatCard from "@/src/components/cards/StatCard";
-import ChartCard from "@/src/components/cards/ChartCard";
 import DonutCard from "@/src/components/cards/DonutCard";
 import BarListCard from "@/src/components/cards/BarListCard";
 import Reveal from "@/src/components/layout/Reveal";
 import {
-  CATALOG_HEALTH,
-  DASHBOARD_STATS,
-  REVENUE_TREND,
-  TOP_PERFORMERS,
-} from "@/src/constants/dashboard";
+  avgOrderValue,
+  paidOrderCount,
+  statusBreakdown,
+  topPerformers,
+  totalRevenue,
+  unitsSold,
+} from "@/src/constants/orders";
 import QuickActions from "./QuickActions";
+import RecentOrders from "./RecentOrders";
+
+const usd = (n: number) =>
+  new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(n);
 
 function HeaderBadge() {
   return (
     <span className="inline-flex w-fit items-center gap-2 rounded-full border border-accent-border bg-accent/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-accent">
       <span className="h-1.5 w-1.5 rounded-full bg-accent pulse-glow" />
-      Live · Synced moments ago
+      Live · Derived from orders
     </span>
   );
 }
 
 export default function DashboardView() {
-  const topRows = TOP_PERFORMERS.map((g) => ({
-    id: g.id,
-    label: g.title,
-    sublabel: g.studio,
-    value: g.revenue,
-    valueLabel: `$${g.revenue.toLocaleString()}`,
-    href: `/admin/games/${g.id}`,
+  const stats = [
+    { label: "Revenue", value: usd(totalRevenue()), sublabel: "Paid orders, all time" },
+    { label: "Units sold", value: String(unitsSold()), sublabel: "Items across paid orders" },
+    { label: "Paid orders", value: String(paidOrderCount()), sublabel: "Successfully captured" },
+    { label: "Avg order value", value: usd(avgOrderValue()), sublabel: "Revenue ÷ paid orders" },
+  ];
+
+  const topRows = topPerformers().map((p) => ({
+    id: p.gameId,
+    label: p.title,
+    sublabel: `${p.units} sold`,
+    value: p.revenue,
+    valueLabel: usd(p.revenue),
   }));
 
   return (
@@ -43,7 +54,7 @@ export default function DashboardView() {
       <PageHeader
         eyebrow="Admin · Overview"
         title="Welcome back, SK"
-        description="A premium-grade snapshot of how your store is performing this month."
+        description="Every number below is computed from real store orders — no estimates."
         actions={
           <>
             <GhostButton href="/admin/games">View all games</GhostButton>
@@ -54,47 +65,34 @@ export default function DashboardView() {
 
       <Reveal>
         <section className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {DASHBOARD_STATS.map((stat) => (
-            <StatCard key={stat.id} stat={stat} />
+          {stats.map((s) => (
+            <StatCard key={s.label} {...s} />
           ))}
         </section>
       </Reveal>
 
       <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Reveal className="lg:col-span-2 *:h-full">
-          <ChartCard
-            title="Revenue trend"
-            subtitle="Daily gross · last 30 days"
-            data={REVENUE_TREND}
-            value="$184,260"
-            delta="+12.4% vs prior period"
-            positive
+          <BarListCard
+            title="Top performers"
+            subtitle="Revenue · from paid orders"
+            rows={topRows}
           />
         </Reveal>
         <Reveal delay={120} className="*:h-full">
           <DonutCard
-            title="Catalog health"
-            subtitle="Current title distribution"
-            segments={CATALOG_HEALTH}
-            centerLabel="Titles"
+            title="Orders by status"
+            subtitle="All orders to date"
+            segments={statusBreakdown()}
+            centerLabel="Orders"
           />
         </Reveal>
       </div>
 
       <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Reveal className="lg:col-span-2 *:h-full">
-          <BarListCard
-            title="Top performers"
-            subtitle="Revenue · last 30 days"
-            rows={topRows}
-            rightAction={
-              <span className="text-xs font-semibold text-accent hover:underline cursor-pointer">
-                See report
-              </span>
-            }
-          />
+          <RecentOrders />
         </Reveal>
-
         <Reveal delay={120} className="*:h-full">
           <QuickActions />
         </Reveal>

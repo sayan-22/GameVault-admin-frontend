@@ -41,8 +41,8 @@ export default function GameFormView(props: Props) {
         title={isEdit ? "Edit game" : "Add a new game"}
         description={
           isEdit
-            ? "Update the title, pricing, and media for this game."
-            : "Fill in the details, upload a banner and a muted auto-play preview, then publish."
+            ? "Update the details, media, and pricing the storefront shows for this game."
+            : "Fill in the details, add tags, upload media, and set requirements — it goes live on the storefront when saved."
         }
         actions={<GhostButton href="/admin/games">Back to games</GhostButton>}
       />

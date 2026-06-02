@@ -1,7 +1,22 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useSyncExternalStore,
+  type ReactNode,
+} from "react";
 import { createPortal } from "react-dom";
+
+const noop = () => () => {};
+// false during SSR, true once on the client — without setState in an effect.
+function useMounted() {
+  return useSyncExternalStore(
+    noop,
+    () => true,
+    () => false
+  );
+}
 
 type Size = "sm" | "md" | "lg";
 
@@ -36,9 +51,7 @@ export default function Modal({
 }: Props) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const prevFocus = useRef<HTMLElement | null>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
+  const mounted = useMounted();
 
   useEffect(() => {
     if (!open) return;

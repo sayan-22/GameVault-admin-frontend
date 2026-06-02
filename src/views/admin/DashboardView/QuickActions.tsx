@@ -18,15 +18,15 @@ const ACTIONS: Action[] = [
   {
     href: "/admin/games/new",
     label: "Add new game",
-    description: "Create a fresh draft",
+    description: "Create a new title",
     icon: PlusIcon,
     tone: "accent",
   },
   {
-    href: "/admin/banners",
-    label: "Upload media",
-    description: "Banners & auto-play",
-    icon: ImageIcon,
+    href: "/admin/games",
+    label: "Edit games",
+    description: "Manage the catalog",
+    icon: GamesIcon,
     tone: "success",
   },
   {
@@ -89,12 +89,14 @@ function PlusIcon() {
   );
 }
 
-function ImageIcon() {
+function GamesIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="3" width="18" height="18" rx="2" />
-      <circle cx="8.5" cy="8.5" r="1.5" />
-      <polyline points="21 15 16 10 5 21" />
+      <line x1="6" y1="11" x2="10" y2="11" />
+      <line x1="8" y1="9" x2="8" y2="13" />
+      <line x1="15" y1="12" x2="15.01" y2="12" />
+      <line x1="18" y1="10" x2="18.01" y2="10" />
+      <rect x="2" y="6" width="20" height="12" rx="4" />
     </svg>
   );
 }

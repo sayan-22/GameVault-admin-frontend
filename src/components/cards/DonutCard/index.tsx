@@ -9,9 +9,10 @@ import {
   type ChartOptions,
 } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import type { DonutSegment } from "@/src/constants/dashboard";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
+
+export type DonutSegment = { label: string; value: number; color: string };
 
 type Props = {
   title: string;

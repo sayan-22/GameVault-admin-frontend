@@ -8,25 +8,22 @@ import GhostButton from "@/src/components/buttons/GhostButton";
 import GameCard from "@/src/components/cards/GameCard";
 import Input from "@/src/components/ui/Input";
 import Reveal from "@/src/components/layout/Reveal";
-import {
-  MOCK_GAMES,
-  STATUS_LABEL,
-  type GameStatus,
-} from "@/src/constants/games";
+import { MOCK_GAMES } from "@/src/constants/games";
 
-const FILTERS: Array<{ key: GameStatus | "all"; label: string }> = [
+type Filter = "all" | "free" | "sale";
+
+const FILTERS: Array<{ key: Filter; label: string }> = [
   { key: "all", label: "All" },
-  { key: "published", label: STATUS_LABEL.published },
-  { key: "draft", label: STATUS_LABEL.draft },
-  { key: "archived", label: STATUS_LABEL.archived },
+  { key: "free", label: "Free" },
+  { key: "sale", label: "On sale" },
 ];
 
 function FilterPills({
   active,
   onChange,
 }: {
-  active: GameStatus | "all";
-  onChange: (k: GameStatus | "all") => void;
+  active: Filter;
+  onChange: (k: Filter) => void;
 }) {
   return (
     <div className="flex flex-wrap items-center gap-2 rounded-md border border-border-soft bg-bg-elevated p-1">
@@ -50,18 +47,22 @@ function FilterPills({
 
 export default function GamesListView() {
   const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState<GameStatus | "all">("all");
+  const [filter, setFilter] = useState<Filter>("all");
 
   const games = useMemo(() => {
     const q = query.trim().toLowerCase();
     return MOCK_GAMES.filter((g) => {
-      const matchStatus = filter === "all" || g.status === filter;
+      const matchFilter =
+        filter === "all" ||
+        (filter === "free" && g.free) ||
+        (filter === "sale" && !g.free && (g.discount ?? 0) > 0);
       const matchQuery =
         !q ||
         g.title.toLowerCase().includes(q) ||
-        g.studio.toLowerCase().includes(q) ||
-        g.genre.toLowerCase().includes(q);
-      return matchStatus && matchQuery;
+        g.developer.toLowerCase().includes(q) ||
+        g.publisher.toLowerCase().includes(q) ||
+        g.tags.some((t) => t.toLowerCase().includes(q));
+      return matchFilter && matchQuery;
     });
   }, [query, filter]);
 
@@ -70,7 +71,7 @@ export default function GamesListView() {
       <PageHeader
         eyebrow="Catalog"
         title="Games"
-        description="Add, edit, and manage every title in your store."
+        description="Add, edit, and manage every title shown on the storefront."
         actions={
           <>
             <GhostButton href="/admin">Back to dashboard</GhostButton>
@@ -82,7 +83,7 @@ export default function GamesListView() {
       <div className="flex flex-col gap-4 pb-8 lg:flex-row lg:items-center lg:justify-between">
         <Input
           containerClassName="w-full lg:max-w-md"
-          placeholder="Search by title, studio, or genre"
+          placeholder="Search by title, studio, or tag"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           leading={<SearchIcon />}
@@ -96,7 +97,7 @@ export default function GamesListView() {
             No games match your filters
           </p>
           <p className="text-sm text-text-muted">
-            Try clearing the search or selecting a different status.
+            Try clearing the search or choosing a different filter.
           </p>
         </div>
       ) : (
@@ -114,16 +115,7 @@ export default function GamesListView() {
 
 function SearchIcon() {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="11" cy="11" r="7" />
       <path d="m20 20-3.5-3.5" />
     </svg>

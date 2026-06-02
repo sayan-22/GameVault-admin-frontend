@@ -11,6 +11,6 @@ export const PUBLIC_NAV_LINKS: NavLink[] = [
 export const ADMIN_NAV_LINKS: NavLink[] = [
   { label: "Dashboard", href: "/admin" },
   { label: "Games", href: "/admin/games" },
-  { label: "Banners", href: "/admin/banners" },
+  { label: "Orders", href: "/admin/orders" },
   { label: "Prices", href: "/admin/prices" },
 ];

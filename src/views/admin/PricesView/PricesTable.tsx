@@ -6,14 +6,31 @@ import GhostButton from "@/src/components/buttons/GhostButton";
 import Badge from "@/src/components/ui/Badge";
 import { MOCK_GAMES, type Game } from "@/src/constants/games";
 
-type Row = Pick<Game, "id" | "title" | "studio" | "price" | "discount">;
+type Row = {
+  id: string;
+  title: string;
+  developer: string;
+  price: number;
+  discount: number;
+  free: boolean;
+};
+
+const toRows = (games: Game[]): Row[] =>
+  games.map((g) => ({
+    id: g.id,
+    title: g.title,
+    developer: g.developer,
+    price: g.price,
+    discount: g.discount ?? 0,
+    free: g.free ?? false,
+  }));
 
 function priceClasses() {
   return "h-9 w-16 sm:w-20 rounded-md border border-border-soft bg-bg-elevated px-2 text-right text-sm text-text-primary outline-none focus:border-accent";
 }
 
 export default function PricesTable() {
-  const [rows, setRows] = useState<Row[]>(MOCK_GAMES);
+  const [rows, setRows] = useState<Row[]>(() => toRows(MOCK_GAMES));
   const [dirty, setDirty] = useState(false);
 
   function update(id: string, key: "price" | "discount", value: number) {
@@ -24,7 +41,7 @@ export default function PricesTable() {
   }
 
   function reset() {
-    setRows(MOCK_GAMES);
+    setRows(toRows(MOCK_GAMES));
     setDirty(false);
   }
 
@@ -41,7 +58,7 @@ export default function PricesTable() {
 
         <ul className="divide-y divide-border-soft">
           {rows.map((row) => {
-            const final = row.price * (1 - row.discount / 100);
+            const final = row.free ? 0 : row.price * (1 - row.discount / 100);
             return (
               <li
                 key={row.id}
@@ -51,7 +68,7 @@ export default function PricesTable() {
                   <span className="font-display text-sm font-semibold text-text-primary">
                     {row.title}
                   </span>
-                  <span className="text-xs text-text-muted">{row.studio}</span>
+                  <span className="text-xs text-text-muted">{row.developer}</span>
                 </div>
 
                 <label className="flex items-center justify-end gap-2 text-xs text-text-muted">
@@ -62,6 +79,7 @@ export default function PricesTable() {
                     step="0.01"
                     min={0}
                     value={row.price}
+                    disabled={row.free}
                     onChange={(e) =>
                       update(row.id, "price", Number(e.target.value))
                     }
@@ -76,6 +94,7 @@ export default function PricesTable() {
                     min={0}
                     max={100}
                     value={row.discount}
+                    disabled={row.free}
                     onChange={(e) =>
                       update(row.id, "discount", Number(e.target.value))
                     }
@@ -89,7 +108,9 @@ export default function PricesTable() {
                 </span>
 
                 <div className="flex justify-end">
-                  {row.discount > 0 ? (
+                  {row.free ? (
+                    <Badge tone="accent">Free</Badge>
+                  ) : row.discount > 0 ? (
                     <Badge tone="danger">On sale</Badge>
                   ) : (
                     <Badge tone="neutral">Regular</Badge>
