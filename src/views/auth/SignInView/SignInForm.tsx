@@ -1,22 +1,50 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, type FormEvent } from "react";
 import Input from "@/src/components/ui/Input";
 import PrimaryButton from "@/src/components/buttons/PrimaryButton";
+import FormError from "@/src/components/form/FormError";
+import { useAppDispatch, useAppSelector } from "@/src/lib/store/hooks";
+import { signinThunk } from "@/src/lib/store/slices/authSlice";
 
 export default function SignInForm() {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const user = useAppSelector((s) => s.auth.user);
   const [submitting, setSubmitting] = useState(false);
   const [remember, setRemember] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  function onSubmit(e: FormEvent<HTMLFormElement>) {
+  // Already signed in → skip the form.
+  useEffect(() => {
+    if (user) router.replace("/admin");
+  }, [user, router]);
+
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const form = new FormData(e.currentTarget);
     setSubmitting(true);
-    setTimeout(() => setSubmitting(false), 900);
+    setError(null);
+    try {
+      await dispatch(
+        signinThunk({
+          email: String(form.get("email")),
+          password: String(form.get("password")),
+          remember,
+        })
+      ).unwrap();
+      router.push("/admin");
+    } catch (err) {
+      setError(typeof err === "string" ? err : "Could not sign in");
+      setSubmitting(false);
+    }
   }
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-5">
+      <FormError message={error} />
       <Input
         label="Email"
         name="email"

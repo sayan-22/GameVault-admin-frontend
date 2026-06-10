@@ -25,7 +25,7 @@ const SIZE = {
 export default function GhostButton(props: Props) {
   const { children, icon, size = "md", className = "", ...rest } = props;
 
-  const classes = `inline-flex items-center justify-center gap-2 font-medium rounded-md border border-border-soft bg-bg-elevated text-text-secondary cursor-pointer transition-all duration-200 hover:text-text-primary hover:border-accent-border focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 disabled:opacity-50 disabled:cursor-not-allowed ${SIZE[size]} ${className}`;
+  const classes = `inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium rounded-md border border-border-soft bg-bg-elevated text-text-secondary cursor-pointer transition-all duration-200 hover:text-text-primary hover:border-accent-border focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 disabled:opacity-50 disabled:cursor-not-allowed ${SIZE[size]} ${className}`;
 
   if ("href" in rest && rest.href) {
     const { href, ...anchorRest } = rest as AsLink;

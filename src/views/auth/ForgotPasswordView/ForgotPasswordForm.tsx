@@ -4,19 +4,29 @@ import { useState, type FormEvent } from "react";
 import Input from "@/src/components/ui/Input";
 import PrimaryButton from "@/src/components/buttons/PrimaryButton";
 import GhostButton from "@/src/components/buttons/GhostButton";
+import FormError from "@/src/components/form/FormError";
+import { useAppDispatch } from "@/src/lib/store/hooks";
+import { forgotPasswordThunk } from "@/src/lib/store/slices/authSlice";
 
 export default function ForgotPasswordForm() {
+  const dispatch = useAppDispatch();
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function onSubmit(e: FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
+    setError(null);
+    try {
+      await dispatch(forgotPasswordThunk(email)).unwrap();
       setSent(true);
-    }, 900);
+    } catch (err) {
+      setError(typeof err === "string" ? err : "Could not send reset link");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   if (sent) {
@@ -53,6 +63,7 @@ export default function ForgotPasswordForm() {
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-5">
+      <FormError message={error} />
       <Input
         label="Email"
         name="email"

@@ -1,3 +1,5 @@
+"use client";
+
 import Container from "@/src/components/layout/Container";
 import PageHeader from "@/src/components/layout/PageHeader";
 import PrimaryButton from "@/src/components/buttons/PrimaryButton";
@@ -6,19 +8,22 @@ import StatCard from "@/src/components/cards/StatCard";
 import DonutCard from "@/src/components/cards/DonutCard";
 import BarListCard from "@/src/components/cards/BarListCard";
 import Reveal from "@/src/components/layout/Reveal";
-import {
-  avgOrderValue,
-  paidOrderCount,
-  statusBreakdown,
-  topPerformers,
-  totalRevenue,
-  unitsSold,
-} from "@/src/constants/orders";
+import { useEffect } from "react";
+import FormError from "@/src/components/form/FormError";
+import LoadingView from "@/src/views/LoadingView";
+import { useAppDispatch, useAppSelector } from "@/src/lib/store/hooks";
+import { fetchDashboard } from "@/src/lib/store/slices/dashboardSlice";
 import QuickActions from "./QuickActions";
 import RecentOrders from "./RecentOrders";
 
 const usd = (n: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(n);
+
+const STATUS_COLOR: Record<string, string> = {
+  Paid: "#00C16A",
+  Pending: "#00D9FF",
+  Failed: "#FF5A5F",
+};
 
 function HeaderBadge() {
   return (
@@ -30,14 +35,30 @@ function HeaderBadge() {
 }
 
 export default function DashboardView() {
-  const stats = [
-    { label: "Revenue", value: usd(totalRevenue()), sublabel: "Paid orders, all time" },
-    { label: "Units sold", value: String(unitsSold()), sublabel: "Items across paid orders" },
-    { label: "Paid orders", value: String(paidOrderCount()), sublabel: "Successfully captured" },
-    { label: "Avg order value", value: usd(avgOrderValue()), sublabel: "Revenue ÷ paid orders" },
-  ];
+  const dispatch = useAppDispatch();
+  const { data, status, error } = useAppSelector((s) => s.dashboard);
 
-  const topRows = topPerformers().map((p) => ({
+  useEffect(() => {
+    dispatch(fetchDashboard());
+  }, [dispatch]);
+
+  if (status === "idle" || status === "loading") return <LoadingView />;
+
+  const stats = data
+    ? [
+        { label: "Revenue", value: usd(data.stats.revenue), sublabel: "Paid orders, all time" },
+        { label: "Units sold", value: String(data.stats.units), sublabel: "Items across paid orders" },
+        { label: "Paid orders", value: String(data.stats.paidOrders), sublabel: "Successfully captured" },
+        { label: "Avg order value", value: usd(data.stats.avgOrderValue), sublabel: "Revenue ÷ paid orders" },
+      ]
+    : [];
+
+  const segments = (data?.ordersByStatus ?? []).map((s) => ({
+    ...s,
+    color: STATUS_COLOR[s.label] ?? "#8B949E",
+  }));
+
+  const topRows = (data?.topPerformers ?? []).map((p) => ({
     id: p.gameId,
     label: p.title,
     sublabel: `${p.units} sold`,
@@ -53,7 +74,7 @@ export default function DashboardView() {
 
       <PageHeader
         eyebrow="Admin · Overview"
-        title="Welcome back, SK"
+        title="Welcome back"
         description="Every number below is computed from real store orders — no estimates."
         actions={
           <>
@@ -62,6 +83,8 @@ export default function DashboardView() {
           </>
         }
       />
+
+      {error && <FormError message={error} />}
 
       <Reveal>
         <section className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -83,7 +106,7 @@ export default function DashboardView() {
           <DonutCard
             title="Orders by status"
             subtitle="All orders to date"
-            segments={statusBreakdown()}
+            segments={segments}
             centerLabel="Orders"
           />
         </Reveal>
@@ -91,7 +114,7 @@ export default function DashboardView() {
 
       <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Reveal className="lg:col-span-2 *:h-full">
-          <RecentOrders />
+          <RecentOrders orders={data?.recentOrders ?? []} />
         </Reveal>
         <Reveal delay={120} className="*:h-full">
           <QuickActions />

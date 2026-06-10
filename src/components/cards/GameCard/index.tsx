@@ -5,7 +5,7 @@ import { finalPrice, type Game } from "@/src/constants/games";
 
 function Cover({ game }: { game: Game }) {
   return (
-    <div className="relative h-40 w-full overflow-hidden rounded-lg bg-bg-elevated">
+    <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-bg-elevated">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={game.banner}
@@ -33,17 +33,17 @@ export default function GameCard({ game }: { game: Game }) {
   const final = finalPrice(game);
 
   return (
-    <article className="hover-lift card-glow group flex flex-col gap-4 rounded-xl border border-border-card bg-bg-card p-4">
+    <article className="hover-lift card-glow group flex h-full flex-col gap-4 rounded-xl border border-border-card bg-bg-card p-4">
       <Cover game={game} />
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-1 flex-col gap-2">
         <h3 className="font-display text-base font-semibold text-text-primary line-clamp-1">
           {game.title}
         </h3>
         <p className="text-xs text-text-muted line-clamp-1">
           {game.developer} · {game.publisher}
         </p>
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-nowrap gap-1.5 overflow-hidden">
           {game.tags.slice(0, 3).map((t) => (
             <Badge key={t} tone="neutral">
               {t}

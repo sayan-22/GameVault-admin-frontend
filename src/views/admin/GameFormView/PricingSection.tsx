@@ -1,6 +1,8 @@
 "use client";
 
+import { useState, type ChangeEvent } from "react";
 import Input from "@/src/components/ui/Input";
+import SwitchToggleButton from "@/src/components/buttons/SwitchToggleButton";
 import { type Game } from "@/src/constants/games";
 
 type Props = {
@@ -10,22 +12,30 @@ type Props = {
 };
 
 export default function PricingSection({ initial, free, setFree }: Props) {
+  const [price, setPrice] = useState(() =>
+    free ? "" : String(initial?.price ?? "")
+  );
+  const [discount, setDiscount] = useState(() =>
+    free ? "" : String(initial?.discount ?? 0)
+  );
+
+  function handleFreeChange(nextFree: boolean) {
+    if (nextFree) {
+      setPrice("");
+      setDiscount("");
+    }
+    setFree(nextFree);
+  }
+
   return (
-    <section className="flex flex-col gap-5 rounded-xl border border-border-card bg-bg-card p-6">
+    <section className="flex flex-col gap-5 rounded-xl border border-border-card bg-bg-card p-4 sm:p-6">
       <div className="flex items-center justify-between gap-3">
         <h2 className="font-display text-base font-semibold text-text-primary">Pricing</h2>
-        <label className="flex cursor-pointer items-center gap-2.5 text-xs font-medium text-text-secondary">
-          Free to play
-          <button
-            type="button"
-            role="switch"
-            aria-checked={free}
-            onClick={() => setFree(!free)}
-            className={`relative h-6 w-11 rounded-full transition-colors ${free ? "bg-accent" : "bg-bg-elevated border border-border-soft"}`}
-          >
-            <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${free ? "translate-x-5" : "translate-x-0.5"}`} />
-          </button>
-        </label>
+        <SwitchToggleButton
+          checked={free}
+          label="Free to play"
+          onCheckedChange={handleFreeChange}
+        />
       </div>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -35,7 +45,10 @@ export default function PricingSection({ initial, free, setFree }: Props) {
           type="number"
           step="0.01"
           min={0}
-          defaultValue={initial?.price ?? ""}
+          value={price}
+          onChange={(event: ChangeEvent<HTMLInputElement>) =>
+            setPrice(event.target.value)
+          }
           leading={<span className="text-sm">$</span>}
           disabled={free}
           required={!free}
@@ -47,7 +60,10 @@ export default function PricingSection({ initial, free, setFree }: Props) {
           type="number"
           min={0}
           max={100}
-          defaultValue={initial?.discount ?? 0}
+          value={discount}
+          onChange={(event: ChangeEvent<HTMLInputElement>) =>
+            setDiscount(event.target.value)
+          }
           disabled={free}
         />
       </div>

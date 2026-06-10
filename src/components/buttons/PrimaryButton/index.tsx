@@ -42,7 +42,7 @@ export default function PrimaryButton(props: Props) {
   } = props;
 
   const base =
-    "inline-flex items-center justify-center gap-2 font-semibold tracking-wide rounded-md cursor-pointer transition-all duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#121212] disabled:opacity-50 disabled:cursor-not-allowed";
+    "inline-flex items-center justify-center gap-2 whitespace-nowrap font-semibold tracking-wide rounded-md cursor-pointer transition-all duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#121212] disabled:opacity-50 disabled:cursor-not-allowed";
 
   const classes = `${base} ${SIZE[size]} ${VARIANT[variant]} ${className}`;
 

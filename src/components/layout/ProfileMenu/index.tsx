@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import Popover from "@/src/components/popover/Popover";
 import ConfirmModal from "@/src/components/modal/ConfirmModal";
+import { useAppDispatch, useAppSelector } from "@/src/lib/store/hooks";
+import { logoutThunk } from "@/src/lib/store/slices/authSlice";
 
 type Item = {
   label: string;
@@ -13,21 +16,27 @@ type Item = {
   icon?: ReactNode;
 };
 
-const LINK_ITEMS: Item[] = [
+const SIGNED_OUT_ITEMS: Item[] = [
   { label: "Sign in", href: "/signin", icon: <SignInIcon /> },
   { label: "Create account", href: "/signup", icon: <UserPlusIcon /> },
 ];
 
 export default function ProfileMenu() {
+  const user = useAppSelector((s) => s.auth.user);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
 
-  function handleLogout() {
+  async function handleLogout() {
     setLoggingOut(true);
-    setTimeout(() => {
-      setLoggingOut(false);
+    try {
+      await dispatch(logoutThunk());
       setConfirmOpen(false);
-    }, 700);
+      router.push("/signin");
+    } finally {
+      setLoggingOut(false);
+    }
   }
 
   return (
@@ -52,31 +61,36 @@ export default function ProfileMenu() {
           <>
             <div className="border-b border-border-soft px-4 py-3">
               <p className="font-display text-sm font-semibold text-text-primary">
-                Guest
+                {user?.name ?? "Guest"}
               </p>
-              <p className="text-xs text-text-muted">Not signed in</p>
+              <p className="truncate text-xs text-text-muted">
+                {user?.email ?? "Not signed in"}
+              </p>
             </div>
 
             <ul className="flex flex-col py-1.5">
-              {LINK_ITEMS.map((item) => (
-                <li key={item.label}>
-                  <MenuRow item={item} onSelect={close} />
+              {!user &&
+                SIGNED_OUT_ITEMS.map((item) => (
+                  <li key={item.label}>
+                    <MenuRow item={item} onSelect={close} />
+                  </li>
+                ))}
+              {user && (
+                <li>
+                  <MenuRow
+                    item={{
+                      label: "Log out",
+                      tone: "danger",
+                      icon: <LogOutIcon />,
+                      onClick: () => {
+                        close();
+                        setConfirmOpen(true);
+                      },
+                    }}
+                    onSelect={() => {}}
+                  />
                 </li>
-              ))}
-              <li>
-                <MenuRow
-                  item={{
-                    label: "Log out",
-                    tone: "danger",
-                    icon: <LogOutIcon />,
-                    onClick: () => {
-                      close();
-                      setConfirmOpen(true);
-                    },
-                  }}
-                  onSelect={() => {}}
-                />
-              </li>
+              )}
             </ul>
           </>
         )}

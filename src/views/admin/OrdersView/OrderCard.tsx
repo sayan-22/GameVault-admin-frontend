@@ -15,7 +15,7 @@ const fmtDate = (iso: string) =>
 
 export default function OrderCard({ order }: { order: Order }) {
   return (
-    <article className="hover-lift card-glow flex flex-col gap-4 rounded-xl border border-border-card bg-bg-card p-5">
+    <article className="hover-lift card-glow flex h-full flex-col gap-4 rounded-xl border border-border-card bg-bg-card p-5">
       <header className="flex items-start justify-between gap-3">
         <div className="flex flex-col gap-0.5">
           <span className="font-mono text-sm text-text-secondary">{order._id}</span>
@@ -24,7 +24,7 @@ export default function OrderCard({ order }: { order: Order }) {
         <Badge tone={STATUS_TONE[order.status]}>{order.status}</Badge>
       </header>
 
-      <ul className="flex flex-col divide-y divide-border-soft rounded-lg border border-border-soft bg-bg-elevated/40">
+      <ul className="flex flex-1 flex-col divide-y divide-border-soft rounded-lg border border-border-soft bg-bg-elevated/40">
         {order.items.map((item) => (
           <li key={item.gameId} className="flex items-center justify-between gap-3 px-4 py-2.5">
             <span className="truncate text-sm text-text-primary">{item.title}</span>

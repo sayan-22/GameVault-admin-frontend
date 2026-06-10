@@ -2,6 +2,7 @@
 
 import { useState, type KeyboardEvent } from "react";
 import Input from "@/src/components/ui/Input";
+import InputDate from "@/src/components/ui/InputDate";
 import TextArea from "@/src/components/ui/TextArea";
 import { CATEGORIES, type Game } from "@/src/constants/games";
 
@@ -31,14 +32,14 @@ export default function BasicsSection({ initial, tags, setTags }: Props) {
   }
 
   return (
-    <section className="flex flex-col gap-5 rounded-xl border border-border-card bg-bg-card p-6">
+    <section className="flex flex-col gap-5 rounded-xl border border-border-card bg-bg-card p-4 sm:p-6">
       <h2 className="font-display text-base font-semibold text-text-primary">Basics</h2>
 
       <Input label="Title" name="title" placeholder="e.g. Neon Drift: Hyperion" defaultValue={initial?.title ?? ""} required />
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <Input label="Slug" name="slug" placeholder="neon-drift-hyperion" defaultValue={initial?.slug ?? ""} hint="Used in the storefront URL" />
-        <Input label="Release date" name="releaseDate" type="date" defaultValue={initial?.releaseDate ?? ""} />
+        <InputDate label="Release date" name="releaseDate" defaultValue={initial?.releaseDate} required />
       </div>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -62,7 +63,7 @@ export default function BasicsSection({ initial, tags, setTags }: Props) {
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={onKeyDown}
             placeholder={tags.length ? "" : "Type a tag and press Enter"}
-            className="min-w-32 flex-1 bg-transparent py-1 text-sm text-text-primary outline-none placeholder:text-text-muted"
+            className="min-w-24 flex-1 bg-transparent py-1 text-sm text-text-primary outline-none placeholder:text-text-muted"
           />
         </div>
         <div className="flex flex-wrap gap-1.5">
@@ -75,7 +76,7 @@ export default function BasicsSection({ initial, tags, setTags }: Props) {
         </div>
       </div>
 
-      <TextArea label="Description" name="description" placeholder="Tell players what makes this game special…" defaultValue={initial?.description ?? ""} />
+      <TextArea label="Description" name="description" placeholder="Tell players what makes this game special…" defaultValue={initial?.description ?? ""} required />
     </section>
   );
 }

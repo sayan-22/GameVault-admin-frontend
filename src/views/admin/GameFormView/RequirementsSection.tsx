@@ -14,7 +14,7 @@ function SpecColumn({
 }) {
   return (
     <div
-      className={`flex flex-col gap-4 rounded-lg border p-5 ${
+      className={`flex flex-col gap-4 rounded-lg border p-4 sm:p-5 ${
         accent ? "border-accent-border bg-accent/5" : "border-border-soft bg-bg-elevated/40"
       }`}
     >
@@ -36,7 +36,7 @@ export default function RequirementsSection({ initial }: { initial?: Partial<Gam
   const req = initial?.systemRequirements;
 
   return (
-    <section className="flex flex-col gap-5 rounded-xl border border-border-card bg-bg-card p-6">
+    <section className="flex flex-col gap-5 rounded-xl border border-border-card bg-bg-card p-4 sm:p-6">
       <div className="flex flex-col gap-1">
         <h2 className="font-display text-base font-semibold text-text-primary">
           System requirements

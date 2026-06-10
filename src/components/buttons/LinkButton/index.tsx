@@ -6,6 +6,12 @@ type Props = {
   onClick?: () => void;
   icon?: LucideIcon;
   iconPosition?: "left" | "right";
+  variant?: "accent" | "danger";
+};
+
+const VARIANT = {
+  accent: "text-accent hover:text-accent-glow",
+  danger: "text-danger hover:underline",
 };
 
 // A lightweight inline link-style button (text + optional icon). Navigation is
@@ -16,12 +22,13 @@ export default function LinkButton({
   onClick,
   icon: Icon,
   iconPosition = "right",
+  variant = "accent",
 }: Props) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`group inline-flex items-center gap-1.5 cursor-pointer text-xs font-semibold text-accent transition-colors hover:text-accent-glow focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 ${className}`}
+      className={`group inline-flex items-center gap-1.5 cursor-pointer text-xs font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 ${VARIANT[variant]} ${className}`}
     >
       {Icon && iconPosition === "left" ? (
         <Icon

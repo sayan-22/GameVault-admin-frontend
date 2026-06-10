@@ -1,128 +1,168 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PrimaryButton from "@/src/components/buttons/PrimaryButton";
 import GhostButton from "@/src/components/buttons/GhostButton";
 import Badge from "@/src/components/ui/Badge";
-import { MOCK_GAMES, type Game } from "@/src/constants/games";
+import FormError from "@/src/components/form/FormError";
+import { useAppDispatch, useAppSelector } from "@/src/lib/store/hooks";
+import {
+  fetchGames,
+  updatePricesThunk,
+} from "@/src/lib/store/slices/gamesSlice";
+import type { PriceUpdate } from "@/src/lib/api/games";
 
-type Row = {
-  id: string;
-  title: string;
-  developer: string;
-  price: number;
-  discount: number;
-  free: boolean;
-};
+type Edit = { price?: number; discount?: number };
 
-const toRows = (games: Game[]): Row[] =>
-  games.map((g) => ({
-    id: g.id,
-    title: g.title,
-    developer: g.developer,
-    price: g.price,
-    discount: g.discount ?? 0,
-    free: g.free ?? false,
-  }));
-
-function priceClasses() {
-  return "h-9 w-16 sm:w-20 rounded-md border border-border-soft bg-bg-elevated px-2 text-right text-sm text-text-primary outline-none focus:border-accent";
-}
+// Fixed-width bordered box so Base price + Discount inputs line up exactly,
+// with the unit ($ / %) sitting inside. Final value and Status badge share the
+// same right edge, so all four value columns align.
+const FIELD_WRAP =
+  "flex h-9 w-20 sm:w-24 items-center gap-1 rounded-md border border-border-soft bg-bg-elevated px-2 transition-colors focus-within:border-accent";
+const FIELD_INPUT =
+  "w-full bg-transparent text-right text-sm text-text-primary outline-none disabled:opacity-50";
 
 export default function PricesTable() {
-  const [rows, setRows] = useState<Row[]>(() => toRows(MOCK_GAMES));
-  const [dirty, setDirty] = useState(false);
+  const dispatch = useAppDispatch();
+  const { list, listStatus, listError } = useAppSelector((s) => s.games);
+  const [edits, setEdits] = useState<Record<string, Edit>>({});
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
-  function update(id: string, key: "price" | "discount", value: number) {
-    setRows((prev) =>
-      prev.map((r) => (r.id === id ? { ...r, [key]: value } : r))
-    );
-    setDirty(true);
+  useEffect(() => {
+    dispatch(fetchGames(undefined));
+  }, [dispatch]);
+
+  const games = list;
+  const loading = listStatus === "idle" || listStatus === "loading";
+  const dirty = Object.keys(edits).length > 0;
+
+  function update(id: string, key: keyof Edit, value: number) {
+    setEdits((prev) => ({ ...prev, [id]: { ...prev[id], [key]: value } }));
   }
 
   function reset() {
-    setRows(toRows(MOCK_GAMES));
-    setDirty(false);
+    setEdits({});
+    setSaveError(null);
   }
+
+  async function save() {
+    const updates: PriceUpdate[] = Object.entries(edits).map(([id, e]) => ({
+      id,
+      ...e,
+    }));
+    setSaving(true);
+    setSaveError(null);
+    try {
+      await dispatch(updatePricesThunk(updates)).unwrap();
+      setEdits({});
+      dispatch(fetchGames(undefined));
+    } catch (err) {
+      setSaveError(typeof err === "string" ? err : "Could not save prices");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="h-64 animate-pulse rounded-xl border border-border-card bg-bg-card" />
+    );
+  }
+  if (listError) return <FormError message={listError} />;
 
   return (
     <div className="flex flex-col gap-4">
+      <FormError message={saveError} />
       <div className="overflow-hidden rounded-xl border border-border-card bg-bg-card">
         <div className="hidden grid-cols-[1.6fr_1fr_1fr_1fr_1.2fr] gap-4 border-b border-border-soft px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.15em] text-text-muted lg:grid">
           <span>Title</span>
-          <span className="text-right">Base price</span>
-          <span className="text-right">Discount</span>
-          <span className="text-right">Final</span>
-          <span className="text-right">Status</span>
+          <span className="text-center">Base price</span>
+          <span className="text-center">Discount</span>
+          <span className="text-center">Final</span>
+          <span className="text-center">Status</span>
         </div>
 
         <ul className="divide-y divide-border-soft">
-          {rows.map((row) => {
-            const final = row.free ? 0 : row.price * (1 - row.discount / 100);
+          {games.map((game) => {
+            const price = edits[game.id]?.price ?? game.price;
+            const discount = edits[game.id]?.discount ?? game.discount ?? 0;
+            const final = game.free ? 0 : price * (1 - discount / 100);
+            const statusBadge = game.free ? (
+              <Badge tone="accent">Free</Badge>
+            ) : discount > 0 ? (
+              <Badge tone="danger">On sale</Badge>
+            ) : (
+              <Badge tone="neutral">Regular</Badge>
+            );
             return (
               <li
-                key={row.id}
-                className="grid grid-cols-2 items-center gap-4 px-5 py-4 lg:grid-cols-[1.6fr_1fr_1fr_1fr_1.2fr]"
+                key={game.id}
+                className="flex flex-col gap-3 px-4 py-4 lg:grid lg:grid-cols-[1.6fr_1fr_1fr_1fr_1.2fr] lg:items-center lg:gap-4 lg:px-5"
               >
-                <div className="col-span-2 flex flex-col gap-0.5 lg:col-span-1">
-                  <span className="font-display text-sm font-semibold text-text-primary">
-                    {row.title}
+                <div className="flex items-start justify-between gap-3 lg:block">
+                  <div className="flex flex-col gap-0.5">
+                    <span className="font-display text-sm font-semibold text-text-primary">
+                      {game.title}
+                    </span>
+                    <span className="text-xs text-text-muted">
+                      {game.developer}
+                    </span>
+                  </div>
+                  <span className="lg:hidden">{statusBadge}</span>
+                </div>
+
+                <label className="flex items-center justify-between gap-2 text-xs text-text-muted lg:justify-center">
+                  <span className="lg:hidden">Base price</span>
+                  <span className={FIELD_WRAP}>
+                    <span className="text-text-muted">$</span>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min={0}
+                      value={price}
+                      disabled={game.free}
+                      onChange={(e) =>
+                        update(game.id, "price", Number(e.target.value))
+                      }
+                      className={FIELD_INPUT}
+                    />
                   </span>
-                  <span className="text-xs text-text-muted">{row.developer}</span>
-                </div>
-
-                <label className="flex items-center justify-end gap-2 text-xs text-text-muted">
-                  <span className="lg:hidden">Price</span>
-                  <span>$</span>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min={0}
-                    value={row.price}
-                    disabled={row.free}
-                    onChange={(e) =>
-                      update(row.id, "price", Number(e.target.value))
-                    }
-                    className={priceClasses()}
-                  />
                 </label>
 
-                <label className="flex items-center justify-end gap-2 text-xs text-text-muted">
+                <label className="flex items-center justify-between gap-2 text-xs text-text-muted lg:justify-center">
                   <span className="lg:hidden">Discount</span>
-                  <input
-                    type="number"
-                    min={0}
-                    max={100}
-                    value={row.discount}
-                    disabled={row.free}
-                    onChange={(e) =>
-                      update(row.id, "discount", Number(e.target.value))
-                    }
-                    className={priceClasses()}
-                  />
-                  <span>%</span>
+                  <span className={FIELD_WRAP}>
+                    <input
+                      type="number"
+                      min={0}
+                      max={100}
+                      value={discount}
+                      disabled={game.free}
+                      onChange={(e) =>
+                        update(game.id, "discount", Number(e.target.value))
+                      }
+                      className={FIELD_INPUT}
+                    />
+                    <span className="text-text-muted">%</span>
+                  </span>
                 </label>
 
-                <span className="text-right font-display text-sm font-bold text-text-primary">
-                  ${final.toFixed(2)}
-                </span>
-
-                <div className="flex justify-end">
-                  {row.free ? (
-                    <Badge tone="accent">Free</Badge>
-                  ) : row.discount > 0 ? (
-                    <Badge tone="danger">On sale</Badge>
-                  ) : (
-                    <Badge tone="neutral">Regular</Badge>
-                  )}
+                <div className="flex items-center justify-between lg:block lg:text-center">
+                  <span className="text-xs text-text-muted lg:hidden">Final</span>
+                  <span className="font-display text-sm font-bold text-text-primary">
+                    ${final.toFixed(2)}
+                  </span>
                 </div>
+
+                <div className="hidden justify-center lg:flex">{statusBadge}</div>
               </li>
             );
           })}
         </ul>
       </div>
 
-      <div className="sticky bottom-4 z-10 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border-card bg-bg-card/95 px-4 py-3 backdrop-blur">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border-card bg-bg-card px-4 py-3">
         <p className="text-xs text-text-muted">
           {dirty ? (
             <>
@@ -132,16 +172,12 @@ export default function PricesTable() {
             "All prices saved"
           )}
         </p>
-        <div className="flex gap-2 ml-auto">
-          <GhostButton size="sm" onClick={reset} disabled={!dirty}>
+        <div className="ml-auto flex gap-2">
+          <GhostButton size="sm" onClick={reset} disabled={!dirty || saving}>
             Reset
           </GhostButton>
-          <PrimaryButton
-            size="sm"
-            disabled={!dirty}
-            onClick={() => setDirty(false)}
-          >
-            Save prices
+          <PrimaryButton size="sm" disabled={!dirty || saving} onClick={save}>
+            {saving ? "Saving…" : "Save prices"}
           </PrimaryButton>
         </div>
       </div>

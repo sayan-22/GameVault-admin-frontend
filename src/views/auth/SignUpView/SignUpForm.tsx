@@ -1,8 +1,12 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useMemo, useState, type FormEvent } from "react";
 import Input from "@/src/components/ui/Input";
 import PrimaryButton from "@/src/components/buttons/PrimaryButton";
+import FormError from "@/src/components/form/FormError";
+import { useAppDispatch } from "@/src/lib/store/hooks";
+import { signupThunk } from "@/src/lib/store/slices/authSlice";
 
 function scorePassword(pw: string) {
   let score = 0;
@@ -22,20 +26,38 @@ const STRENGTH = [
 ];
 
 export default function SignUpForm() {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const strength = useMemo(() => STRENGTH[scorePassword(password)], [
     password,
   ]);
 
-  function onSubmit(e: FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const form = new FormData(e.currentTarget);
     setSubmitting(true);
-    setTimeout(() => setSubmitting(false), 900);
+    setError(null);
+    try {
+      await dispatch(
+        signupThunk({
+          name: String(form.get("name")),
+          email: String(form.get("email")),
+          password: String(form.get("password")),
+        })
+      ).unwrap();
+      router.push("/admin");
+    } catch (err) {
+      setError(typeof err === "string" ? err : "Could not create account");
+      setSubmitting(false);
+    }
   }
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-5">
+      <FormError message={error} />
       <Input
         label="Full name"
         name="name"

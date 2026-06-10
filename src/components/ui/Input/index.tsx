@@ -7,6 +7,8 @@ type Props = ComponentPropsWithoutRef<"input"> & {
   leading?: ReactNode;
   trailing?: ReactNode;
   containerClassName?: string;
+  // Override the field-box height (defaults to h-11) — e.g. "h-12".
+  fieldClassName?: string;
 };
 
 export default function Input({
@@ -16,6 +18,7 @@ export default function Input({
   leading,
   trailing,
   containerClassName = "",
+  fieldClassName = "h-11",
   className = "",
   id,
   ...rest
@@ -33,7 +36,7 @@ export default function Input({
         </span>
       )}
       <span
-        className={`flex items-center gap-2 h-11 px-4 rounded-md border bg-bg-elevated transition-colors duration-200 focus-within:border-accent ${
+        className={`flex items-center gap-2 ${fieldClassName} px-4 rounded-md border bg-bg-elevated transition-colors duration-200 focus-within:border-accent ${
           error ? "border-danger" : "border-border-soft"
         }`}
       >

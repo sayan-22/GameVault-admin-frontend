@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import Navbar from "@/src/components/layout/Navbar";
+import StoreProvider from "@/src/lib/store/StoreProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -35,8 +36,10 @@ export default function RootLayout({
         suppressHydrationWarning
         className="flex min-h-dvh flex-col bg-bg-base text-text-primary"
       >
-        <Navbar />
-        <main className="flex-1">{children}</main>
+        <StoreProvider>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+        </StoreProvider>
       </body>
     </html>
   );
