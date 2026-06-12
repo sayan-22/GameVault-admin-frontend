@@ -38,6 +38,14 @@ export default function GameForm({ initial, mode }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [picked, setPicked] = useState<Partial<Record<MediaField, boolean>>>({});
   const files = useRef<Partial<Record<MediaField, File[]>>>({});
+  // Live snapshot of the text inputs + the date, for the "all fields required"
+  // disable-until-complete check (create mode).
+  const [values, setValues] = useState<Record<string, string>>({});
+  const [releaseDate, setReleaseDate] = useState(initial?.releaseDate ?? "");
+
+  function snapshot(form: HTMLFormElement) {
+    setValues(Object.fromEntries(new FormData(form)) as Record<string, string>);
+  }
 
   // The Hero Auto-Play video is mandatory only for the very first game in the
   // store. Load the catalog (create mode) so we know whether it's empty.
@@ -49,7 +57,6 @@ export default function GameForm({ initial, mode }: Props) {
 
   const storeEmpty = listStatus === "succeeded" && games.length === 0;
   const heroRequired = mode === "create" && storeEmpty;
-  const blockFirstGame = heroRequired && !picked.heroVideo;
 
   function handleMedia(field: MediaField, files_: File[]) {
     files.current[field] = files_;
@@ -137,11 +144,37 @@ export default function GameForm({ initial, mode }: Props) {
     }
   }
 
+  // All fields required (create mode). Hero Auto-Play is only part of this when
+  // it's the first game in the store (heroRequired).
+  const textOk = ["title", "slug", "developer", "publisher", "description"].every(
+    (k) => (values[k] ?? "").trim().length > 0
+  );
+  const priceOk = free || (values.price ?? "").trim().length > 0;
+  const mediaOk =
+    !!picked.cover &&
+    !!picked.banner &&
+    !!picked.trailer &&
+    !!picked.screenshots &&
+    (!heroRequired || !!picked.heroVideo);
+  const createComplete =
+    textOk && priceOk && releaseDate.trim().length > 0 && tags.length > 0 && mediaOk;
+  const disableSubmit =
+    saving || deleting || (mode === "create" && !createComplete);
+
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-6">
+    <form
+      onSubmit={onSubmit}
+      onInput={(e) => snapshot(e.currentTarget)}
+      className="flex flex-col gap-6"
+    >
       <FormError message={error} />
 
-      <BasicsSection initial={initial} tags={tags} setTags={setTags} />
+      <BasicsSection
+        initial={initial}
+        tags={tags}
+        setTags={setTags}
+        onReleaseDateChange={setReleaseDate}
+      />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <PricingSection initial={initial} free={free} setFree={setFree} />
@@ -199,7 +232,7 @@ export default function GameForm({ initial, mode }: Props) {
           <GhostButton href="/admin/games" size="sm">
             Cancel
           </GhostButton>
-          <PrimaryButton type="submit" size="sm" disabled={saving || deleting || blockFirstGame}>
+          <PrimaryButton type="submit" size="sm" disabled={disableSubmit}>
             {saving
               ? "Saving…"
               : mode === "create"

@@ -10,9 +10,15 @@ type Props = {
   initial?: Partial<Game>;
   tags: string[];
   setTags: (tags: string[]) => void;
+  onReleaseDateChange?: (value: string) => void;
 };
 
-export default function BasicsSection({ initial, tags, setTags }: Props) {
+export default function BasicsSection({
+  initial,
+  tags,
+  setTags,
+  onReleaseDateChange,
+}: Props) {
   const [draft, setDraft] = useState("");
 
   function add(tag: string) {
@@ -39,7 +45,13 @@ export default function BasicsSection({ initial, tags, setTags }: Props) {
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <Input label="Slug" name="slug" placeholder="neon-drift-hyperion" defaultValue={initial?.slug ?? ""} hint="Used in the storefront URL" />
-        <InputDate label="Release date" name="releaseDate" defaultValue={initial?.releaseDate} required />
+        <InputDate
+          label="Release date"
+          name="releaseDate"
+          defaultValue={initial?.releaseDate}
+          required
+          onChange={onReleaseDateChange}
+        />
       </div>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">

@@ -8,10 +8,10 @@ import StatCard from "@/src/components/cards/StatCard";
 import DonutCard from "@/src/components/cards/DonutCard";
 import BarListCard from "@/src/components/cards/BarListCard";
 import Reveal from "@/src/components/layout/Reveal";
-import { useEffect } from "react";
 import FormError from "@/src/components/form/FormError";
 import LoadingView from "@/src/views/LoadingView";
 import { useAppDispatch, useAppSelector } from "@/src/lib/store/hooks";
+import { usePolling } from "@/src/lib/hooks/usePolling";
 import { fetchDashboard } from "@/src/lib/store/slices/dashboardSlice";
 import QuickActions from "./QuickActions";
 import RecentOrders from "./RecentOrders";
@@ -38,11 +38,11 @@ export default function DashboardView() {
   const dispatch = useAppDispatch();
   const { data, status, error } = useAppSelector((s) => s.dashboard);
 
-  useEffect(() => {
-    dispatch(fetchDashboard());
-  }, [dispatch]);
+  // Auto-refresh: poll every 15s + on tab focus, so revenue/orders update live
+  // without a manual refresh. Loading view only on the very first load.
+  usePolling(() => dispatch(fetchDashboard()));
 
-  if (status === "idle" || status === "loading") return <LoadingView />;
+  if (!data && (status === "idle" || status === "loading")) return <LoadingView />;
 
   const stats = data
     ? [

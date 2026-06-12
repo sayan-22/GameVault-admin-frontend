@@ -115,7 +115,7 @@ export default function UploadCard({
         </div>
       ) : (
         <div
-          className={`relative grid w-full place-items-center overflow-hidden rounded-lg border border-border-soft bg-bg-base ${
+          className={`group relative grid w-full place-items-center overflow-hidden rounded-lg border border-border-soft bg-bg-base ${
             multiple ? "h-52" : "aspect-video"
           }`}
         >
@@ -128,6 +128,7 @@ export default function UploadCard({
           {single && !portrait && (
             <Preview item={single} kind={kind} className="h-full w-full object-cover" />
           )}
+          {single && <RemoveButton onClick={() => remove(single.url)} />}
         </div>
       )}
 
@@ -219,26 +220,34 @@ function Thumb({
   return (
     <div className="group relative aspect-video overflow-hidden rounded-lg border border-border-soft bg-bg-base">
       <Preview item={item} kind={kind} className="h-full w-full object-cover" />
-      <button
-        type="button"
-        onClick={onRemove}
-        aria-label="Remove file"
-        className="absolute right-1.5 top-1.5 grid h-6 w-6 place-items-center rounded-md bg-bg-base/80 text-text-secondary opacity-0 transition-opacity hover:text-danger group-hover:opacity-100"
-      >
-        <svg
-          width="12"
-          height="12"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-        >
-          <line x1="18" y1="6" x2="6" y2="18" />
-          <line x1="6" y1="6" x2="18" y2="18" />
-        </svg>
-      </button>
+      <RemoveButton onClick={onRemove} />
     </div>
+  );
+}
+
+// Cross button shown on hover over a preview (single or thumbnail). The parent
+// must be `group relative`.
+function RemoveButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label="Remove file"
+      className="absolute right-1.5 top-1.5 grid h-6 w-6 place-items-center rounded-md bg-bg-base/80 text-text-secondary opacity-0 transition-opacity hover:text-danger group-hover:opacity-100"
+    >
+      <svg
+        width="12"
+        height="12"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      >
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </svg>
+    </button>
   );
 }
 

@@ -12,6 +12,7 @@ type Props = {
   required?: boolean;
   placeholder?: string;
   containerClassName?: string;
+  onChange?: (value: string) => void;
 };
 
 // Custom date field: a styled trigger + a calendar popover (no native picker).
@@ -24,11 +25,18 @@ export default function InputDate({
   required,
   placeholder = "Select a date",
   containerClassName = "",
+  onChange,
 }: Props) {
   const id = useId();
   const ref = useRef<HTMLDivElement>(null);
   const [value, setValue] = useState(defaultValue ?? "");
   const [open, setOpen] = useState(false);
+
+  function commit(next: string) {
+    setValue(next);
+    onChange?.(next);
+    setOpen(false);
+  }
 
   useEffect(() => {
     if (!open) return;
@@ -80,14 +88,8 @@ export default function InputDate({
           <div className="absolute left-0 top-full z-50 mt-1">
             <Calendar
               value={value}
-              onSelect={(iso) => {
-                setValue(iso);
-                setOpen(false);
-              }}
-              onClear={() => {
-                setValue("");
-                setOpen(false);
-              }}
+              onSelect={(iso) => commit(iso)}
+              onClear={() => commit("")}
             />
           </div>
         )}

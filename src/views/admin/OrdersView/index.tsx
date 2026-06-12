@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Container from "@/src/components/layout/Container";
 import PageHeader from "@/src/components/layout/PageHeader";
 import GhostButton from "@/src/components/buttons/GhostButton";
 import Reveal from "@/src/components/layout/Reveal";
 import FormError from "@/src/components/form/FormError";
 import { useAppDispatch, useAppSelector } from "@/src/lib/store/hooks";
+import { usePolling } from "@/src/lib/hooks/usePolling";
 import { fetchOrders } from "@/src/lib/store/slices/ordersSlice";
 import type { OrderStatus } from "@/src/constants/orders";
 import OrderCard from "./OrderCard";
@@ -30,11 +31,11 @@ export default function OrdersView() {
   const dispatch = useAppDispatch();
   const { list, status, error } = useAppSelector((s) => s.orders);
 
-  useEffect(() => {
-    dispatch(fetchOrders());
-  }, [dispatch]);
+  // Auto-refresh: poll every 15s + on tab focus, so new/updated orders appear
+  // without a manual refresh. Skeleton only shows on the very first load.
+  usePolling(() => dispatch(fetchOrders()));
 
-  const loading = status === "idle" || status === "loading";
+  const loading = (status === "idle" || status === "loading") && list.length === 0;
   const orders = useMemo(() => list, [list]);
   const filtered =
     filter === "all" ? orders : orders.filter((o) => o.status === filter);
