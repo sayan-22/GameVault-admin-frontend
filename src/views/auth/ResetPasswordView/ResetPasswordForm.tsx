@@ -1,11 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import Input from "@/src/components/ui/Input";
-import PrimaryButton from "@/src/components/buttons/PrimaryButton";
-import GhostButton from "@/src/components/buttons/GhostButton";
+import CommonButton from "@/src/components/buttons/CommonButton";
+import OutlineButton from "@/src/components/buttons/OutlineButton";
 import FormError from "@/src/components/form/FormError";
 import { useAppDispatch } from "@/src/lib/store/hooks";
 import { resetPasswordThunk } from "@/src/lib/store/slices/authSlice";
@@ -21,7 +20,7 @@ export default function ResetPasswordForm() {
     return (
       <div className="flex flex-col gap-5">
         <FormError message="This reset link is invalid or has expired." />
-        <GhostButton href="/forgot-password">Request a new link</GhostButton>
+        <OutlineButton href="/forgot-password" text="Request a new link" className="h-11 rounded-lg bg-bg-elevated px-5 text-sm" />
       </div>
     );
   }
@@ -37,11 +36,12 @@ export default function ResetPasswordForm() {
             You can now sign in with your new password.
           </p>
         </div>
-        <Link href="/signin">
-          <PrimaryButton type="button" size="lg" className="w-full">
-            Continue to sign in
-          </PrimaryButton>
-        </Link>
+        <CommonButton
+          href="/signin"
+          text="Continue to sign in"
+          variant="theme"
+          className="h-12 w-full px-6 text-base"
+        />
       </div>
     );
   }
@@ -87,9 +87,13 @@ export default function ResetPasswordForm() {
         minLength={6}
         required
       />
-      <PrimaryButton type="submit" size="lg" disabled={submitting}>
-        {submitting ? "Resetting…" : "Reset password"}
-      </PrimaryButton>
+      <CommonButton
+        type="submit"
+        variant="theme"
+        disabled={submitting}
+        text={submitting ? "Resetting…" : "Reset password"}
+        className="h-12 px-6 text-base"
+      />
     </form>
   );
 }

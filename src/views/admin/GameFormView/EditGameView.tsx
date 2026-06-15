@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import Container from "@/src/components/layout/Container";
 import PageHeader from "@/src/components/layout/PageHeader";
-import GhostButton from "@/src/components/buttons/GhostButton";
+import OutlineButton from "@/src/components/buttons/OutlineButton";
 import Reveal from "@/src/components/layout/Reveal";
 import LoadingView from "@/src/views/LoadingView";
 import { useAppDispatch, useAppSelector } from "@/src/lib/store/hooks";
@@ -30,7 +30,7 @@ export default function EditGameView({ id }: { id: string }) {
           {currentError ?? `No game exists with id ${id}.`}
         </p>
         <div className="mt-6 flex justify-center">
-          <GhostButton href="/admin/games">Back to games</GhostButton>
+          <OutlineButton href="/admin/games" text="Back to games" className="h-11 w-fit rounded-lg bg-bg-elevated px-5 text-sm" />
         </div>
       </Container>
     );
@@ -42,7 +42,7 @@ export default function EditGameView({ id }: { id: string }) {
         eyebrow={`Editing · ${current.title}`}
         title="Edit game"
         description="Update the details, media, and pricing the storefront shows for this game."
-        actions={<GhostButton href="/admin/games">Back to games</GhostButton>}
+        actions={<OutlineButton href="/admin/games" text="Back to games" className="h-11 w-fit rounded-lg bg-bg-elevated px-5 text-sm" />}
       />
       <Reveal>
         <GameForm mode="edit" initial={current} />

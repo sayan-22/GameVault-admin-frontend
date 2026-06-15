@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useMemo, useState, type FormEvent } from "react";
 import Input from "@/src/components/ui/Input";
-import PrimaryButton from "@/src/components/buttons/PrimaryButton";
+import CommonButton from "@/src/components/buttons/CommonButton";
 import FormError from "@/src/components/form/FormError";
 import { useAppDispatch } from "@/src/lib/store/hooks";
 import { signupThunk } from "@/src/lib/store/slices/authSlice";
@@ -123,9 +123,13 @@ export default function SignUpForm() {
         </span>
       </label>
 
-      <PrimaryButton type="submit" size="lg" disabled={submitting}>
-        {submitting ? "Creating account…" : "Create account"}
-      </PrimaryButton>
+      <CommonButton
+        type="submit"
+        variant="theme"
+        disabled={submitting}
+        text={submitting ? "Creating account…" : "Create account"}
+        className="h-12 px-6 text-base"
+      />
     </form>
   );
 }

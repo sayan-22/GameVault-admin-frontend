@@ -1,6 +1,6 @@
 import Container from "@/src/components/layout/Container";
 import PageHeader from "@/src/components/layout/PageHeader";
-import GhostButton from "@/src/components/buttons/GhostButton";
+import OutlineButton from "@/src/components/buttons/OutlineButton";
 import Reveal from "@/src/components/layout/Reveal";
 import PricesTable from "./PricesTable";
 
@@ -11,7 +11,7 @@ export default function PricesView() {
         eyebrow="Catalog"
         title="Manage prices"
         description="Adjust base price and discount for every game in your store. Changes go live after you save."
-        actions={<GhostButton href="/admin">Back to dashboard</GhostButton>}
+        actions={<OutlineButton href="/admin" text="Back to dashboard" className="h-11 w-fit rounded-lg bg-bg-elevated px-5 text-sm" />}
       />
 
       <Reveal>

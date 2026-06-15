@@ -76,7 +76,11 @@ export default function GameCard({ game }: { game: Game }) {
         </div>
 
         <div className="flex items-center gap-1.5">
-          <IconButton href={`/admin/games/${game.id}`} label="Edit game" size="sm" tone="accent">
+          <IconButton
+            href={`/admin/games/${game.id}`}
+            ariaLabel="Edit game"
+            className="h-9 w-9 border-accent-border bg-bg-elevated text-accent transition-all duration-200 hover:bg-accent/10"
+          >
             <PencilIcon />
           </IconButton>
           <Link

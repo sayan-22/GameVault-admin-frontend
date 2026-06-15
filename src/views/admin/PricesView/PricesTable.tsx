@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import PrimaryButton from "@/src/components/buttons/PrimaryButton";
-import GhostButton from "@/src/components/buttons/GhostButton";
+import CommonButton from "@/src/components/buttons/CommonButton";
+import OutlineButton from "@/src/components/buttons/OutlineButton";
 import Badge from "@/src/components/ui/Badge";
 import FormError from "@/src/components/form/FormError";
 import { useAppDispatch, useAppSelector } from "@/src/lib/store/hooks";
@@ -173,12 +173,19 @@ export default function PricesTable() {
           )}
         </p>
         <div className="ml-auto flex gap-2">
-          <GhostButton size="sm" onClick={reset} disabled={!dirty || saving}>
-            Reset
-          </GhostButton>
-          <PrimaryButton size="sm" disabled={!dirty || saving} onClick={save}>
-            {saving ? "Saving…" : "Save prices"}
-          </PrimaryButton>
+          <OutlineButton
+            text="Reset"
+            onClick={reset}
+            disabled={!dirty || saving}
+            className="h-9 w-fit rounded-lg bg-bg-elevated px-4 text-sm"
+          />
+          <CommonButton
+            text={saving ? "Saving…" : "Save prices"}
+            variant="theme"
+            disabled={!dirty || saving}
+            onClick={save}
+            className="h-9 w-fit px-4 text-sm"
+          />
         </div>
       </div>
     </div>

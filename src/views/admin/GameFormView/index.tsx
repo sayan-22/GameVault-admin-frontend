@@ -1,6 +1,6 @@
 import Container from "@/src/components/layout/Container";
 import PageHeader from "@/src/components/layout/PageHeader";
-import GhostButton from "@/src/components/buttons/GhostButton";
+import OutlineButton from "@/src/components/buttons/OutlineButton";
 import Reveal from "@/src/components/layout/Reveal";
 import GameForm from "./GameForm";
 import EditGameView from "./EditGameView";
@@ -16,7 +16,7 @@ export default function GameFormView(props: Props) {
         eyebrow="New game"
         title="Add a new game"
         description="Fill in the details, add tags, upload media, and set requirements — it goes live on the storefront when saved."
-        actions={<GhostButton href="/admin/games">Back to games</GhostButton>}
+        actions={<OutlineButton href="/admin/games" text="Back to games" className="h-11 w-fit rounded-lg bg-bg-elevated px-5 text-sm" />}
       />
       <Reveal>
         <GameForm mode="create" />

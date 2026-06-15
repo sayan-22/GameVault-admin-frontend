@@ -1,6 +1,6 @@
 import Container from "@/src/components/layout/Container";
-import PrimaryButton from "@/src/components/buttons/PrimaryButton";
-import GhostButton from "@/src/components/buttons/GhostButton";
+import CommonButton from "@/src/components/buttons/CommonButton";
+import OutlineButton from "@/src/components/buttons/OutlineButton";
 
 export default function NotFoundView() {
   return (
@@ -29,8 +29,8 @@ export default function NotFoundView() {
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-3">
-          <PrimaryButton href="/admin">Go to Dashboard</PrimaryButton>
-          <GhostButton href="/">Back home</GhostButton>
+          <CommonButton href="/admin" text="Go to Dashboard" variant="theme" className="h-11 w-fit px-5 text-sm" />
+          <OutlineButton href="/" text="Back home" className="h-11 w-fit rounded-lg bg-bg-elevated px-5 text-sm" />
         </div>
       </div>
     </Container>

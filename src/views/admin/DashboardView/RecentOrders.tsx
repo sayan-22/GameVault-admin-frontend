@@ -41,7 +41,7 @@ export default function RecentOrders({
         <LinkButton
           text="View all"
           onClick={() => router.push("/admin/orders")}
-          icon={ArrowRight}
+          Icon={ArrowRight}
           iconPosition="right"
         />
       </header>

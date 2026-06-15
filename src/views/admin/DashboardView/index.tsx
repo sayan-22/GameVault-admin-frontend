@@ -2,8 +2,8 @@
 
 import Container from "@/src/components/layout/Container";
 import PageHeader from "@/src/components/layout/PageHeader";
-import PrimaryButton from "@/src/components/buttons/PrimaryButton";
-import GhostButton from "@/src/components/buttons/GhostButton";
+import CommonButton from "@/src/components/buttons/CommonButton";
+import OutlineButton from "@/src/components/buttons/OutlineButton";
 import StatCard from "@/src/components/cards/StatCard";
 import DonutCard from "@/src/components/cards/DonutCard";
 import BarListCard from "@/src/components/cards/BarListCard";
@@ -78,8 +78,8 @@ export default function DashboardView() {
         description="Every number below is computed from real store orders — no estimates."
         actions={
           <>
-            <GhostButton href="/admin/games">View all games</GhostButton>
-            <PrimaryButton href="/admin/games/new">+ New game</PrimaryButton>
+            <OutlineButton href="/admin/games" text="View all games" className="h-11 w-fit rounded-lg bg-bg-elevated px-5 text-sm" />
+            <CommonButton href="/admin/games/new" text="+ New game" variant="theme" className="h-11 w-fit px-5 text-sm" />
           </>
         }
       />

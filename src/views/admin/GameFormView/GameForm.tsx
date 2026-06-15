@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import PrimaryButton from "@/src/components/buttons/PrimaryButton";
-import GhostButton from "@/src/components/buttons/GhostButton";
+import CommonButton from "@/src/components/buttons/CommonButton";
+import OutlineButton from "@/src/components/buttons/OutlineButton";
 import LinkButton from "@/src/components/buttons/LinkButton";
 import SwitchToggleButton from "@/src/components/buttons/SwitchToggleButton";
 import FormError from "@/src/components/form/FormError";
@@ -248,19 +248,27 @@ export default function GameForm({ initial, mode }: Props) {
             <LinkButton
               text="Delete"
               onClick={() => setConfirmDelete(true)}
-              variant="danger"
+              className="text-danger! hover:text-danger!"
             />
           )}
-          <GhostButton href="/admin/games" size="sm">
-            Cancel
-          </GhostButton>
-          <PrimaryButton type="submit" size="sm" disabled={disableSubmit}>
-            {saving
-              ? "Saving…"
-              : mode === "create"
-                ? "Create game"
-                : "Save changes"}
-          </PrimaryButton>
+          <OutlineButton
+            href="/admin/games"
+            text="Cancel"
+            className="h-9 w-fit rounded-lg bg-bg-elevated px-4 text-sm"
+          />
+          <CommonButton
+            type="submit"
+            variant="theme"
+            disabled={disableSubmit}
+            text={
+              saving
+                ? "Saving…"
+                : mode === "create"
+                  ? "Create game"
+                  : "Save changes"
+            }
+            className="h-9 w-fit px-4 text-sm"
+          />
         </div>
       </div>
 

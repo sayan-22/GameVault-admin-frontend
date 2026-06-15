@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import Container from "@/src/components/layout/Container";
 import PageHeader from "@/src/components/layout/PageHeader";
-import PrimaryButton from "@/src/components/buttons/PrimaryButton";
-import GhostButton from "@/src/components/buttons/GhostButton";
+import CommonButton from "@/src/components/buttons/CommonButton";
+import OutlineButton from "@/src/components/buttons/OutlineButton";
 import GameCard from "@/src/components/cards/GameCard";
 import SkeletonCard from "@/src/components/cards/SkeletonCard";
 import Input from "@/src/components/ui/Input";
@@ -85,8 +85,8 @@ export default function GamesListView() {
         description="Add, edit, and manage every title shown on the storefront."
         actions={
           <>
-            <GhostButton href="/admin">Back to dashboard</GhostButton>
-            <PrimaryButton href="/admin/games/new">+ New game</PrimaryButton>
+            <OutlineButton href="/admin" text="Back to dashboard" className="h-11 w-fit rounded-lg bg-bg-elevated px-5 text-sm" />
+            <CommonButton href="/admin/games/new" text="+ New game" variant="theme" className="h-11 w-fit px-5 text-sm" />
           </>
         }
       />

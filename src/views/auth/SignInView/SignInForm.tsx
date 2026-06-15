@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
 import Input from "@/src/components/ui/Input";
-import PrimaryButton from "@/src/components/buttons/PrimaryButton";
+import CommonButton from "@/src/components/buttons/CommonButton";
 import FormError from "@/src/components/form/FormError";
 import { useAppDispatch, useAppSelector } from "@/src/lib/store/hooks";
 import { signinThunk } from "@/src/lib/store/slices/authSlice";
@@ -81,9 +81,13 @@ export default function SignInForm() {
         </div>
       </div>
 
-      <PrimaryButton type="submit" size="lg" disabled={submitting}>
-        {submitting ? "Signing in…" : "Sign in"}
-      </PrimaryButton>
+      <CommonButton
+        type="submit"
+        variant="theme"
+        disabled={submitting}
+        text={submitting ? "Signing in…" : "Sign in"}
+        className="h-12 px-6 text-base"
+      />
     </form>
   );
 }

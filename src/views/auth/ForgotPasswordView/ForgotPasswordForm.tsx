@@ -2,8 +2,8 @@
 
 import { useState, type FormEvent } from "react";
 import Input from "@/src/components/ui/Input";
-import PrimaryButton from "@/src/components/buttons/PrimaryButton";
-import GhostButton from "@/src/components/buttons/GhostButton";
+import CommonButton from "@/src/components/buttons/CommonButton";
+import OutlineButton from "@/src/components/buttons/OutlineButton";
 import FormError from "@/src/components/form/FormError";
 import { useAppDispatch } from "@/src/lib/store/hooks";
 import { forgotPasswordThunk } from "@/src/lib/store/slices/authSlice";
@@ -48,15 +48,15 @@ export default function ForgotPasswordForm() {
           </div>
         </div>
 
-        <GhostButton
+        <OutlineButton
           type="button"
+          text="Use a different email"
           onClick={() => {
             setSent(false);
             setEmail("");
           }}
-        >
-          Use a different email
-        </GhostButton>
+          className="h-11 rounded-lg bg-bg-elevated px-5 text-sm"
+        />
       </div>
     );
   }
@@ -75,9 +75,13 @@ export default function ForgotPasswordForm() {
         onChange={(e) => setEmail(e.target.value)}
       />
 
-      <PrimaryButton type="submit" size="lg" disabled={submitting}>
-        {submitting ? "Sending link…" : "Send reset link"}
-      </PrimaryButton>
+      <CommonButton
+        type="submit"
+        variant="theme"
+        disabled={submitting}
+        text={submitting ? "Sending link…" : "Send reset link"}
+        className="h-12 px-6 text-base"
+      />
     </form>
   );
 }

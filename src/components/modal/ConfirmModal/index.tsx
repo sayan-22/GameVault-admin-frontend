@@ -2,8 +2,8 @@
 
 import type { ReactNode } from "react";
 import Modal from "@/src/components/modal/Modal";
-import PrimaryButton from "@/src/components/buttons/PrimaryButton";
-import GhostButton from "@/src/components/buttons/GhostButton";
+import CommonButton from "@/src/components/buttons/CommonButton";
+import OutlineButton from "@/src/components/buttons/OutlineButton";
 
 type Tone = "danger" | "default";
 
@@ -61,8 +61,6 @@ function ToneIcon({ tone }: { tone: Tone }) {
   );
 }
 
-const DANGER_CLASSES =
-  "inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-md bg-danger px-5 text-sm font-semibold text-white shadow-[0_8px_24px_rgba(255,90,95,0.25)] transition-all duration-200 hover:bg-danger-soft hover:shadow-[0_12px_32px_rgba(255,90,95,0.45)] focus:outline-none focus-visible:ring-2 focus-visible:ring-danger/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#121212] disabled:opacity-50 disabled:cursor-not-allowed";
 
 export default function ConfirmModal({
   open,
@@ -86,23 +84,19 @@ export default function ConfirmModal({
       icon={icon ?? <ToneIcon tone={tone} />}
       footer={
         <>
-          <GhostButton onClick={onClose} disabled={loading}>
-            {cancelLabel}
-          </GhostButton>
-          {tone === "danger" ? (
-            <button
-              type="button"
-              onClick={onConfirm}
-              disabled={loading}
-              className={DANGER_CLASSES}
-            >
-              {loading ? "Working…" : confirmLabel}
-            </button>
-          ) : (
-            <PrimaryButton onClick={onConfirm} disabled={loading}>
-              {loading ? "Working…" : confirmLabel}
-            </PrimaryButton>
-          )}
+          <OutlineButton
+            text={cancelLabel}
+            onClick={onClose}
+            disabled={loading}
+            className="h-11 w-fit rounded-lg bg-bg-elevated px-5 text-sm"
+          />
+          <CommonButton
+            text={loading ? "Working…" : confirmLabel}
+            onClick={onConfirm}
+            disabled={loading}
+            variant={tone === "danger" ? "danger" : "theme"}
+            className="h-11 w-fit px-5 text-sm"
+          />
         </>
       }
     />

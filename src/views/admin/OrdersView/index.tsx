@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Container from "@/src/components/layout/Container";
 import PageHeader from "@/src/components/layout/PageHeader";
-import GhostButton from "@/src/components/buttons/GhostButton";
+import OutlineButton from "@/src/components/buttons/OutlineButton";
 import Reveal from "@/src/components/layout/Reveal";
 import FormError from "@/src/components/form/FormError";
 import { useAppDispatch, useAppSelector } from "@/src/lib/store/hooks";
@@ -52,7 +52,7 @@ export default function OrdersView() {
             ? "Loading live orders…"
             : `${orders.length} orders · ${paid.length} paid · ${usd(revenue)} captured.`
         }
-        actions={<GhostButton href="/admin">Back to dashboard</GhostButton>}
+        actions={<OutlineButton href="/admin" text="Back to dashboard" className="h-11 w-fit rounded-lg bg-bg-elevated px-5 text-sm" />}
       />
 
       <div className="flex flex-wrap items-center gap-2 pb-8">
