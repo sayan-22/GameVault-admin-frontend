@@ -105,7 +105,6 @@ export default function DashboardView() {
         <Reveal delay={120} className="*:h-full">
           <DonutCard
             title="Orders by status"
-            subtitle="All orders to date"
             segments={segments}
             centerLabel="Orders"
           />

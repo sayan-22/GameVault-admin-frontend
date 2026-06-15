@@ -11,11 +11,19 @@ export type MediaField =
 
 type Props = {
   onChange: (field: MediaField, files: File[]) => void;
+  // Existing screenshot URLs (edit mode) to pre-fill the gallery.
+  initialScreenshots?: string[];
+  // New files + the existing URLs the admin chose to keep.
+  onScreenshotsChange?: (files: File[], keptUrls: string[]) => void;
 };
 
 // Every visual asset the storefront renders for a game, grouped into one tidy
 // panel: cover, hero banner, trailer + hero auto-play video, and the gallery.
-export default function MediaSection({ onChange }: Props) {
+export default function MediaSection({
+  onChange,
+  initialScreenshots,
+  onScreenshotsChange,
+}: Props) {
   return (
     <section className="flex flex-col gap-5 rounded-xl border border-border-card bg-bg-card p-4 sm:p-6">
       <div className="flex flex-col gap-1">
@@ -67,7 +75,8 @@ export default function MediaSection({ onChange }: Props) {
         kind="image"
         multiple
         size="lg"
-        onFilesChange={(f) => onChange("screenshots", f)}
+        initialUrls={initialScreenshots}
+        onMultiChange={onScreenshotsChange}
       />
     </section>
   );

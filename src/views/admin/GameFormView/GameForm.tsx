@@ -38,6 +38,21 @@ export default function GameForm({ initial, mode }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [picked, setPicked] = useState<Partial<Record<MediaField, boolean>>>({});
   const files = useRef<Partial<Record<MediaField, File[]>>>({});
+  // Screenshots are managed separately: newly-uploaded files + the existing
+  // URLs the admin keeps (pre-filled from the game in edit mode).
+  const [screenshotFiles, setScreenshotFiles] = useState<File[]>([]);
+  const [keptScreenshots, setKeptScreenshots] = useState<string[]>(
+    initial?.screenshots ?? []
+  );
+
+  function handleScreenshots(newFiles: File[], keptUrls: string[]) {
+    setScreenshotFiles(newFiles);
+    setKeptScreenshots(keptUrls);
+    setPicked((prev) => ({
+      ...prev,
+      screenshots: newFiles.length + keptUrls.length > 0,
+    }));
+  }
   // Live snapshot of the text inputs + the date, for the "all fields required"
   // disable-until-complete check (create mode).
   const [values, setValues] = useState<Record<string, string>>({});
@@ -93,12 +108,15 @@ export default function GameForm({ initial, mode }: Props) {
     }
     fd.set("systemRequirements", JSON.stringify({ minimum, recommended }));
 
+    // Single media (cover/banner/trailer/heroVideo): only the ones replaced.
     for (const field of Object.keys(files.current) as MediaField[]) {
-      const picked = files.current[field] ?? [];
-      if (field === "screenshots")
-        picked.forEach((file) => fd.append("screenshots", file));
-      else if (picked[0]) fd.append(field, picked[0]);
+      const file = files.current[field]?.[0];
+      if (file) fd.append(field, file);
     }
+
+    // Screenshots: new uploads + the existing URLs the admin kept.
+    screenshotFiles.forEach((file) => fd.append("screenshots", file));
+    fd.set("existingScreenshots", JSON.stringify(keptScreenshots));
     return fd;
   }
 
@@ -213,7 +231,11 @@ export default function GameForm({ initial, mode }: Props) {
         </p>
       )}
 
-      <MediaSection onChange={handleMedia} />
+      <MediaSection
+        onChange={handleMedia}
+        initialScreenshots={initial?.screenshots}
+        onScreenshotsChange={handleScreenshots}
+      />
 
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border-card bg-bg-card px-4 py-3">
         <p className="text-xs text-text-muted">

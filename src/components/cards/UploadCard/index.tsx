@@ -12,11 +12,15 @@ type Props = {
   // Show the preview inside a 3:4 portrait sub-container (centered) without
   // changing the outer box size — for cover art.
   portrait?: boolean;
-  // Reports the currently-selected File objects to the parent (for FormData).
+  // Existing media URLs to seed as thumbnails (edit mode, multiple).
+  initialUrls?: string[];
+  // Single-file cards report selected File objects here.
   onFilesChange?: (files: File[]) => void;
+  // Multiple cards report new Files + the existing URLs still kept.
+  onMultiChange?: (files: File[], keptUrls: string[]) => void;
 };
 
-type Item = { url: string; name: string; file: File };
+type Item = { url: string; name: string; file?: File; existing?: boolean };
 
 export default function UploadCard({
   label,
@@ -26,24 +30,42 @@ export default function UploadCard({
   multiple,
   size = "sm",
   portrait = false,
+  initialUrls,
   onFilesChange,
+  onMultiChange,
 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [items, setItems] = useState<Item[]>([]);
+  const [items, setItems] = useState<Item[]>(() =>
+    (initialUrls ?? []).map((u) => ({
+      url: u,
+      name: u.split("/").pop() || "image",
+      existing: true,
+    }))
+  );
   const [dragOver, setDragOver] = useState(false);
   const onFilesChangeRef = useRef(onFilesChange);
+  const onMultiChangeRef = useRef(onMultiChange);
   useEffect(() => {
     onFilesChangeRef.current = onFilesChange;
+    onMultiChangeRef.current = onMultiChange;
   });
 
   function commit(next: Item[]) {
     setItems(next);
-    onFilesChangeRef.current?.(next.map((i) => i.file));
+    if (multiple) {
+      const files = next.filter((i) => i.file).map((i) => i.file as File);
+      const kept = next.filter((i) => i.existing).map((i) => i.url);
+      onMultiChangeRef.current?.(files, kept);
+    } else {
+      onFilesChangeRef.current?.(
+        next.map((i) => i.file).filter((f): f is File => !!f)
+      );
+    }
   }
 
   function addFiles(files: FileList | null) {
     if (!files || files.length === 0) return;
-    const incoming = Array.from(files).map((f) => ({
+    const incoming: Item[] = Array.from(files).map((f) => ({
       url: URL.createObjectURL(f),
       name: f.name,
       file: f,
@@ -51,13 +73,14 @@ export default function UploadCard({
     if (multiple) {
       commit([...items, ...incoming]);
     } else {
-      items.forEach((p) => URL.revokeObjectURL(p.url));
+      items.forEach((p) => p.file && URL.revokeObjectURL(p.url));
       commit(incoming.slice(0, 1));
     }
   }
 
   function remove(url: string) {
-    URL.revokeObjectURL(url);
+    const target = items.find((i) => i.url === url);
+    if (target?.file) URL.revokeObjectURL(url);
     commit(items.filter((i) => i.url !== url));
   }
 
