@@ -2,9 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { useMemo, useState, type FormEvent } from "react";
-import Input from "@/src/components/ui/Input";
-import CommonButton from "@/src/components/buttons/CommonButton";
-import FormError from "@/src/components/form/FormError";
+import { Input } from "@/src/components/ui";
+import { CommonButton } from "@/src/components/buttons";
+import { FormError } from "@/src/components/form";
 import { useAppDispatch } from "@/src/lib/store/hooks";
 import { signupThunk } from "@/src/lib/store/slices/authSlice";
 

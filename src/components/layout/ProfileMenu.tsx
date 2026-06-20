@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
-import Popover from "@/src/components/popover/Popover";
-import ConfirmModal from "@/src/components/modal/ConfirmModal";
+import { LogIn, LogOut, User, UserPlus } from "lucide-react";
+import { Popover } from "@/src/components/popover";
+import { ConfirmModal } from "@/src/components/modal";
 import { useAppDispatch, useAppSelector } from "@/src/lib/store/hooks";
 import { logoutThunk } from "@/src/lib/store/slices/authSlice";
 
@@ -17,8 +18,8 @@ type Item = {
 };
 
 const SIGNED_OUT_ITEMS: Item[] = [
-  { label: "Sign in", href: "/signin", icon: <SignInIcon /> },
-  { label: "Create account", href: "/signup", icon: <UserPlusIcon /> },
+  { label: "Sign in", href: "/signin", icon: <LogIn size={16} /> },
+  { label: "Create account", href: "/signup", icon: <UserPlus size={16} /> },
 ];
 
 export default function ProfileMenu() {
@@ -53,7 +54,7 @@ export default function ProfileMenu() {
             onClick={toggle}
             className="grid h-10 w-10 cursor-pointer place-items-center rounded-full border border-accent-border bg-linear-to-br from-bg-card to-bg-base text-accent transition-shadow hover:shadow-[0_0_0_2px_rgba(0,217,255,0.25)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
           >
-            <UserIcon />
+            <User size={18} />
           </button>
         )}
       >
@@ -81,7 +82,7 @@ export default function ProfileMenu() {
                     item={{
                       label: "Log out",
                       tone: "danger",
-                      icon: <LogOutIcon />,
+                      icon: <LogOut size={16} />,
                       onClick: () => {
                         close();
                         setConfirmOpen(true);
@@ -150,54 +151,5 @@ function MenuRow({ item, onSelect }: { item: Item; onSelect: () => void }) {
       </span>
       {item.label}
     </button>
-  );
-}
-
-function UserIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
-    </svg>
-  );
-}
-
-function SignInIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-      <polyline points="10 17 15 12 10 7" />
-      <line x1="15" y1="12" x2="3" y2="12" />
-    </svg>
-  );
-}
-
-function UserPlusIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-      <line x1="19" y1="8" x2="19" y2="14" />
-      <line x1="22" y1="11" x2="16" y2="11" />
-    </svg>
-  );
-}
-
-function LogOutIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-      <polyline points="16 17 21 12 16 7" />
-      <line x1="21" y1="12" x2="9" y2="12" />
-    </svg>
   );
 }

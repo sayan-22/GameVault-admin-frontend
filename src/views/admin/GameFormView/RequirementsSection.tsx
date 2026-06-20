@@ -1,5 +1,5 @@
-import Input from "@/src/components/ui/Input";
-import { SPEC_FIELDS, type Game } from "@/src/constants/games";
+import { Input } from "@/src/components/ui";
+import { SPEC_FIELDS, type Game } from "@/src/constants";
 
 function SpecColumn({
   title,

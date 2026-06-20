@@ -1,6 +1,5 @@
-import AuthCard from "@/src/components/cards/AuthCard";
-import Container from "@/src/components/layout/Container";
-import Reveal from "@/src/components/layout/Reveal";
+import { AuthCard } from "@/src/components/cards";
+import { Container, Reveal } from "@/src/components/layout";
 import SignInForm from "./SignInForm";
 
 export default function SignInView() {

@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, type ChangeEvent } from "react";
-import Input from "@/src/components/ui/Input";
-import SwitchToggleButton from "@/src/components/buttons/SwitchToggleButton";
-import { type Game } from "@/src/constants/games";
+import { DollarSign } from "lucide-react";
+import { Input } from "@/src/components/ui";
+import { SwitchToggleButton } from "@/src/components/buttons";
+import { type Game } from "@/src/constants";
 
 type Props = {
   initial?: Partial<Game>;
@@ -49,7 +50,7 @@ export default function PricingSection({ initial, free, setFree }: Props) {
           onChange={(event: ChangeEvent<HTMLInputElement>) =>
             setPrice(event.target.value)
           }
-          leading={<span className="text-sm">$</span>}
+          Icon={DollarSign}
           disabled={free}
           required={!free}
           hint={free ? "Disabled while Free to play is on" : undefined}

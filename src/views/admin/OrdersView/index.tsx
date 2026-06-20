@@ -1,15 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Container from "@/src/components/layout/Container";
-import PageHeader from "@/src/components/layout/PageHeader";
-import OutlineButton from "@/src/components/buttons/OutlineButton";
-import Reveal from "@/src/components/layout/Reveal";
-import FormError from "@/src/components/form/FormError";
+import { Container, PageHeader, Reveal } from "@/src/components/layout";
+import { OutlineButton } from "@/src/components/buttons";
+import { FormError } from "@/src/components/form";
 import { useAppDispatch, useAppSelector } from "@/src/lib/store/hooks";
 import { usePolling } from "@/src/lib/hooks/usePolling";
 import { fetchOrders } from "@/src/lib/store/slices/ordersSlice";
-import type { OrderStatus } from "@/src/constants/orders";
+import type { OrderStatus } from "@/src/constants";
 import OrderCard from "./OrderCard";
 
 type Filter = OrderStatus | "all";

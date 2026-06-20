@@ -1,10 +1,8 @@
 "use client";
 
 import { useState, type KeyboardEvent } from "react";
-import Input from "@/src/components/ui/Input";
-import InputDate from "@/src/components/ui/InputDate";
-import TextArea from "@/src/components/ui/TextArea";
-import { CATEGORIES, type Game } from "@/src/constants/games";
+import { Input, InputDate, TextArea } from "@/src/components/ui";
+import { CATEGORIES, type Game } from "@/src/constants";
 
 type Props = {
   initial?: Partial<Game>;

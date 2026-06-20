@@ -1,6 +1,5 @@
-import Container from "@/src/components/layout/Container";
-import CommonButton from "@/src/components/buttons/CommonButton";
-import OutlineButton from "@/src/components/buttons/OutlineButton";
+import { Container } from "@/src/components/layout";
+import { CommonButton, OutlineButton } from "@/src/components/buttons";
 
 export default function NotFoundView() {
   return (

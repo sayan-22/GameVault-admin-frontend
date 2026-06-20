@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import Input from "@/src/components/ui/Input";
-import CommonButton from "@/src/components/buttons/CommonButton";
-import OutlineButton from "@/src/components/buttons/OutlineButton";
-import FormError from "@/src/components/form/FormError";
+import { MailCheck } from "lucide-react";
+import { Input } from "@/src/components/ui";
+import { CommonButton, OutlineButton } from "@/src/components/buttons";
+import { FormError } from "@/src/components/form";
 import { useAppDispatch } from "@/src/lib/store/hooks";
 import { forgotPasswordThunk } from "@/src/lib/store/slices/authSlice";
 
@@ -34,7 +34,7 @@ export default function ForgotPasswordForm() {
       <div className="flex flex-col gap-5">
         <div className="flex flex-col items-center gap-3 rounded-xl border border-success/30 bg-success/5 px-4 py-6 text-center">
           <div className="grid h-12 w-12 place-items-center rounded-full bg-success/15 text-success-light">
-            <MailCheckIcon />
+            <MailCheck size={22} />
           </div>
           <div className="flex flex-col gap-1">
             <p className="font-display text-base font-semibold text-text-primary">
@@ -83,24 +83,5 @@ export default function ForgotPasswordForm() {
         className="h-12 px-6 text-base"
       />
     </form>
-  );
-}
-
-function MailCheckIcon() {
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9" />
-      <polyline points="22 6 12 13 2 6" />
-      <path d="m16 19 2 2 4-4" />
-    </svg>
   );
 }

@@ -2,9 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
-import Badge from "@/src/components/ui/Badge";
-import LinkButton from "@/src/components/buttons/LinkButton";
-import { STATUS_TONE } from "@/src/constants/orders";
+import { Badge } from "@/src/components/ui";
+import { LinkButton } from "@/src/components/buttons";
+import { STATUS_TONE } from "@/src/constants";
 import type { Dashboard } from "@/src/lib/api/schemas";
 
 const fmt = (n: number, currency: string) =>

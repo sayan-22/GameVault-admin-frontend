@@ -1,6 +1,6 @@
 "use client";
 
-import UploadCard from "@/src/components/cards/UploadCard";
+import { UploadCard } from "@/src/components/cards";
 
 export type MediaField =
   | "cover"

@@ -2,13 +2,15 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import CommonButton from "@/src/components/buttons/CommonButton";
-import OutlineButton from "@/src/components/buttons/OutlineButton";
-import LinkButton from "@/src/components/buttons/LinkButton";
-import SwitchToggleButton from "@/src/components/buttons/SwitchToggleButton";
-import FormError from "@/src/components/form/FormError";
-import ConfirmModal from "@/src/components/modal/ConfirmModal";
-import { SPEC_FIELDS, type Game } from "@/src/constants/games";
+import {
+  CommonButton,
+  OutlineButton,
+  LinkButton,
+  SwitchToggleButton,
+} from "@/src/components/buttons";
+import { FormError } from "@/src/components/form";
+import { ConfirmModal } from "@/src/components/modal";
+import { SPEC_FIELDS, type Game } from "@/src/constants";
 import { useAppDispatch, useAppSelector } from "@/src/lib/store/hooks";
 import {
   createGameThunk,

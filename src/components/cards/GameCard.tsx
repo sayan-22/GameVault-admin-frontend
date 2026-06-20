@@ -1,7 +1,8 @@
 import Link from "next/link";
-import Badge from "@/src/components/ui/Badge";
-import IconButton from "@/src/components/buttons/IconButton";
-import { finalPrice, type Game } from "@/src/constants/games";
+import { Pencil } from "lucide-react";
+import { Badge } from "@/src/components/ui";
+import { IconButton } from "@/src/components/buttons";
+import { finalPrice, type Game } from "@/src/constants";
 
 function Cover({ game }: { game: Game }) {
   return (
@@ -81,7 +82,7 @@ export default function GameCard({ game }: { game: Game }) {
             ariaLabel="Edit game"
             className="h-9 w-9 border-accent-border bg-bg-elevated text-accent transition-all duration-200 hover:bg-accent/10"
           >
-            <PencilIcon />
+            <Pencil size={14} />
           </IconButton>
           <Link
             href={`/admin/games/${game.id}`}
@@ -92,14 +93,5 @@ export default function GameCard({ game }: { game: Game }) {
         </div>
       </div>
     </article>
-  );
-}
-
-function PencilIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 20h9" />
-      <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4Z" />
-    </svg>
   );
 }

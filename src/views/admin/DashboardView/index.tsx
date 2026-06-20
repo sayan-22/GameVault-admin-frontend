@@ -1,14 +1,9 @@
 "use client";
 
-import Container from "@/src/components/layout/Container";
-import PageHeader from "@/src/components/layout/PageHeader";
-import CommonButton from "@/src/components/buttons/CommonButton";
-import OutlineButton from "@/src/components/buttons/OutlineButton";
-import StatCard from "@/src/components/cards/StatCard";
-import DonutCard from "@/src/components/cards/DonutCard";
-import BarListCard from "@/src/components/cards/BarListCard";
-import Reveal from "@/src/components/layout/Reveal";
-import FormError from "@/src/components/form/FormError";
+import { Container, PageHeader, Reveal } from "@/src/components/layout";
+import { CommonButton, OutlineButton } from "@/src/components/buttons";
+import { StatCard, DonutCard, BarListCard } from "@/src/components/cards";
+import { FormError } from "@/src/components/form";
 import LoadingView from "@/src/views/LoadingView";
 import { useAppDispatch, useAppSelector } from "@/src/lib/store/hooks";
 import { usePolling } from "@/src/lib/hooks/usePolling";

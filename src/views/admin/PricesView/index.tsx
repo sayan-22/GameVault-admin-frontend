@@ -1,7 +1,5 @@
-import Container from "@/src/components/layout/Container";
-import PageHeader from "@/src/components/layout/PageHeader";
-import OutlineButton from "@/src/components/buttons/OutlineButton";
-import Reveal from "@/src/components/layout/Reveal";
+import { Container, PageHeader, Reveal } from "@/src/components/layout";
+import { OutlineButton } from "@/src/components/buttons";
 import PricesTable from "./PricesTable";
 
 export default function PricesView() {

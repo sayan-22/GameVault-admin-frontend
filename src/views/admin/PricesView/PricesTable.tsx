@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import CommonButton from "@/src/components/buttons/CommonButton";
-import OutlineButton from "@/src/components/buttons/OutlineButton";
-import Badge from "@/src/components/ui/Badge";
-import FormError from "@/src/components/form/FormError";
+import { CommonButton, OutlineButton } from "@/src/components/buttons";
+import { Badge } from "@/src/components/ui";
+import { FormError } from "@/src/components/form";
 import { useAppDispatch, useAppSelector } from "@/src/lib/store/hooks";
 import {
   fetchGames,

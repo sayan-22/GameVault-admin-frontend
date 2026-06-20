@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
 import {
   ADMIN_NAV_LINKS,
   PUBLIC_NAV_LINKS,
   type NavLink as NavLinkItem,
-} from "@/src/constants/nav";
+} from "@/src/constants";
 import ProfileMenu from "@/src/components/layout/ProfileMenu";
 
 function getLinks(pathname: string): NavLinkItem[] {
@@ -80,7 +81,7 @@ function HamburgerButton({
       onClick={onToggle}
       className="grid h-10 w-10 cursor-pointer place-items-center rounded-md border border-border-soft bg-bg-elevated text-text-primary transition-colors hover:border-accent-border focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 md:hidden"
     >
-      {open ? <XIcon /> : <BarsIcon />}
+      {open ? <X size={20} /> : <Menu size={20} />}
     </button>
   );
 }
@@ -162,42 +163,5 @@ export default function Navbar() {
         />
       )}
     </header>
-  );
-}
-
-function BarsIcon() {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="3" y1="6" x2="21" y2="6" />
-      <line x1="3" y1="12" x2="21" y2="12" />
-      <line x1="3" y1="18" x2="21" y2="18" />
-    </svg>
-  );
-}
-
-function XIcon() {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="18" y1="6" x2="6" y2="18" />
-      <line x1="6" y1="6" x2="18" y2="18" />
-    </svg>
   );
 }

@@ -1,10 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import Container from "@/src/components/layout/Container";
-import PageHeader from "@/src/components/layout/PageHeader";
-import OutlineButton from "@/src/components/buttons/OutlineButton";
-import Reveal from "@/src/components/layout/Reveal";
+import { Container, PageHeader, Reveal } from "@/src/components/layout";
+import { OutlineButton } from "@/src/components/buttons";
 import LoadingView from "@/src/views/LoadingView";
 import { useAppDispatch, useAppSelector } from "@/src/lib/store/hooks";
 import { fetchGameById } from "@/src/lib/store/slices/gamesSlice";

@@ -2,10 +2,9 @@
 
 import { useSearchParams } from "next/navigation";
 import { useState, type FormEvent } from "react";
-import Input from "@/src/components/ui/Input";
-import CommonButton from "@/src/components/buttons/CommonButton";
-import OutlineButton from "@/src/components/buttons/OutlineButton";
-import FormError from "@/src/components/form/FormError";
+import { Input } from "@/src/components/ui";
+import { CommonButton, OutlineButton } from "@/src/components/buttons";
+import { FormError } from "@/src/components/form";
 import { useAppDispatch } from "@/src/lib/store/hooks";
 import { resetPasswordThunk } from "@/src/lib/store/slices/authSlice";
 

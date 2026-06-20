@@ -1,15 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Container from "@/src/components/layout/Container";
-import PageHeader from "@/src/components/layout/PageHeader";
-import CommonButton from "@/src/components/buttons/CommonButton";
-import OutlineButton from "@/src/components/buttons/OutlineButton";
-import GameCard from "@/src/components/cards/GameCard";
-import SkeletonCard from "@/src/components/cards/SkeletonCard";
-import Input from "@/src/components/ui/Input";
-import Reveal from "@/src/components/layout/Reveal";
-import FormError from "@/src/components/form/FormError";
+import { Search } from "lucide-react";
+import { Container, PageHeader, Reveal } from "@/src/components/layout";
+import { CommonButton, OutlineButton } from "@/src/components/buttons";
+import { GameCard, SkeletonCard } from "@/src/components/cards";
+import { Input } from "@/src/components/ui";
+import { FormError } from "@/src/components/form";
 import { useAppDispatch, useAppSelector } from "@/src/lib/store/hooks";
 import { fetchGames } from "@/src/lib/store/slices/gamesSlice";
 
@@ -98,7 +95,7 @@ export default function GamesListView() {
           placeholder="Search by title, studio, or publisher"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          leading={<SearchIcon />}
+          Icon={Search}
         />
         <FilterPills active={filter} onChange={setFilter} />
       </div>
@@ -131,23 +128,5 @@ export default function GamesListView() {
         </div>
       )}
     </Container>
-  );
-}
-
-function SearchIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="11" cy="11" r="7" />
-      <path d="m20 20-3.5-3.5" />
-    </svg>
   );
 }

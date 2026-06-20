@@ -1,5 +1,5 @@
-import Badge from "@/src/components/ui/Badge";
-import { type Order, STATUS_TONE } from "@/src/constants/orders";
+import { Badge } from "@/src/components/ui";
+import { type Order, STATUS_TONE } from "@/src/constants";
 
 const fmt = (n: number, currency: string) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: currency.toUpperCase() }).format(n);

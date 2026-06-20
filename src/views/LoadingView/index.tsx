@@ -1,8 +1,5 @@
-import Container from "@/src/components/layout/Container";
-import {
-  SkeletonStat,
-  default as SkeletonCard,
-} from "@/src/components/cards/SkeletonCard";
+import { Container } from "@/src/components/layout";
+import { SkeletonStat, SkeletonCard } from "@/src/components/cards";
 
 export default function LoadingView() {
   return (

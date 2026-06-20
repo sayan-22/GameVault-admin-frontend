@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import { Upload, X } from "lucide-react";
 
 type Props = {
   label: string;
@@ -192,7 +193,7 @@ function Placeholder({
           lg ? "h-14 w-14" : "h-9 w-9"
         }`}
       >
-        <UploadIcon size={lg ? 28 : 20} />
+        <Upload size={lg ? 28 : 20} />
       </div>
       <p
         className={`text-text-secondary ${lg ? "text-base font-medium" : "text-xs"}`}
@@ -258,37 +259,7 @@ function RemoveButton({ onClick }: { onClick: () => void }) {
       aria-label="Remove file"
       className="absolute right-1.5 top-1.5 grid h-6 w-6 place-items-center rounded-md bg-bg-base/80 text-text-secondary opacity-0 transition-opacity hover:text-danger group-hover:opacity-100"
     >
-      <svg
-        width="12"
-        height="12"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      >
-        <line x1="18" y1="6" x2="6" y2="18" />
-        <line x1="6" y1="6" x2="18" y2="18" />
-      </svg>
+      <X size={12} strokeWidth={2.5} />
     </button>
-  );
-}
-
-function UploadIcon({ size = 20 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-      <polyline points="17 8 12 3 7 8" />
-      <line x1="12" y1="3" x2="12" y2="15" />
-    </svg>
   );
 }
