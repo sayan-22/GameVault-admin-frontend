@@ -20,6 +20,14 @@ const fmtDate = (iso: string) =>
     year: "numeric",
   });
 
+// Show the game name(s) instead of the opaque order id. For multi-game orders,
+// show the first game and a "+N more" hint.
+const orderTitle = (items: { title: string }[]) => {
+  if (items.length === 0) return "Order";
+  const first = items[0].title;
+  return items.length > 1 ? `${first} +${items.length - 1} more` : first;
+};
+
 export default function RecentOrders({
   orders,
 }: {
@@ -56,8 +64,8 @@ export default function RecentOrders({
               className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"
             >
               <div className="flex min-w-0 flex-col gap-0.5">
-                <span className="truncate font-mono text-xs text-text-secondary">
-                  {o.id}
+                <span className="truncate text-sm font-medium text-text-primary">
+                  {orderTitle(o.items)}
                 </span>
                 <span className="truncate text-xs text-text-muted">
                   {o.items.length} {o.items.length === 1 ? "item" : "items"} ·{" "}

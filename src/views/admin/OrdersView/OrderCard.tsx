@@ -17,10 +17,7 @@ export default function OrderCard({ order }: { order: Order }) {
   return (
     <article className="hover-lift card-glow flex h-full flex-col gap-4 rounded-xl border border-border-card bg-bg-card p-5">
       <header className="flex items-start justify-between gap-3">
-        <div className="flex flex-col gap-0.5">
-          <span className="font-mono text-sm text-text-secondary">{order._id}</span>
-          <span className="text-xs text-text-muted">{fmtDate(order.createdAt)}</span>
-        </div>
+        <span className="text-sm text-text-secondary">{fmtDate(order.createdAt)}</span>
         <Badge tone={STATUS_TONE[order.status]}>{order.status}</Badge>
       </header>
 
