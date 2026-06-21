@@ -1,12 +1,7 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import * as authApi from "@/src/lib/api/auth";
-import { apiError } from "@/src/lib/api/client";
-import {
-  getAccessToken,
-  getRefreshToken,
-  getStoredUser,
-  type StoredUser,
-} from "@/src/lib/auth/storage";
+import * as authApi from "@/src/lib/services/auth";
+import { apiError } from "@/src/lib/services/authAxios";
+import { getStoredUser, type StoredUser } from "@/src/lib/auth/storage";
 
 type AuthState = {
   user: StoredUser | null;
@@ -17,10 +12,14 @@ const initialState: AuthState = { user: null, initializing: true };
 
 export const bootstrapAuth = createAsyncThunk(
   "auth/bootstrap",
-  (_: void, { rejectWithValue }) => {
-    // No tokens at all → don't bother hitting /me (avoids a guaranteed 401).
-    if (!getAccessToken() && !getRefreshToken()) return rejectWithValue("no-session");
-    return authApi.fetchMe();
+  async (_: void, { rejectWithValue }) => {
+    // The auth cookie (if any) is httpOnly, so JS can't peek at it — just ask
+    // /me. The cookie rides along automatically; a 401 means "no session".
+    try {
+      return await authApi.fetchMe();
+    } catch {
+      return rejectWithValue("no-session");
+    }
   }
 );
 

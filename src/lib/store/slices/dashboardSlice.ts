@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getDashboard } from "@/src/lib/api/dashboard";
-import { apiError } from "@/src/lib/api/client";
-import type { Dashboard } from "@/src/lib/api/schemas";
+import { getDashboard } from "@/src/lib/services/dashboard";
+import { apiError } from "@/src/lib/services/authAxios";
+import type { Dashboard } from "@/src/lib/services/schemas";
 
 type Status = "idle" | "loading" | "succeeded" | "failed";
 

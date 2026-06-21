@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { listOrders } from "@/src/lib/api/orders";
-import { apiError } from "@/src/lib/api/client";
-import type { Order } from "@/src/lib/api/schemas";
+import { listOrders } from "@/src/lib/services/orders";
+import { apiError } from "@/src/lib/services/authAxios";
+import type { Order } from "@/src/lib/services/schemas";
 
 type Status = "idle" | "loading" | "succeeded" | "failed";
 

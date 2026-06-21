@@ -9,7 +9,7 @@ import {
   fetchGames,
   updatePricesThunk,
 } from "@/src/lib/store/slices/gamesSlice";
-import type { PriceUpdate } from "@/src/lib/api/games";
+import type { PriceUpdate } from "@/src/lib/services/games";
 
 type Edit = { price?: number; discount?: number };
 

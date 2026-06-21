@@ -1,9 +1,8 @@
-// Persists the admin's auth tokens + public user in localStorage. Guarded for
-// SSR (no window). Keep keys namespaced so they don't collide with the
-// storefront app running on the same host during local dev.
+// Caches the signed-in admin (id/name/email/role — NOT secret) so the UI can
+// render instantly on load, before the /me check confirms the session.
+// Auth tokens are NOT stored here anymore: they live in httpOnly cookies that
+// JavaScript can't read, which is what keeps them safe from XSS.
 
-const ACCESS_KEY = "gv_admin_access";
-const REFRESH_KEY = "gv_admin_refresh";
 const USER_KEY = "gv_admin_user";
 
 const isBrowser = typeof window !== "undefined";
@@ -14,20 +13,6 @@ export type StoredUser = {
   email: string;
   role: string;
 };
-
-export function getAccessToken(): string | null {
-  return isBrowser ? localStorage.getItem(ACCESS_KEY) : null;
-}
-
-export function getRefreshToken(): string | null {
-  return isBrowser ? localStorage.getItem(REFRESH_KEY) : null;
-}
-
-export function setTokens(access: string, refresh?: string) {
-  if (!isBrowser) return;
-  localStorage.setItem(ACCESS_KEY, access);
-  if (refresh) localStorage.setItem(REFRESH_KEY, refresh);
-}
 
 export function getStoredUser(): StoredUser | null {
   if (!isBrowser) return null;
@@ -44,9 +29,6 @@ export function setStoredUser(user: StoredUser) {
   if (isBrowser) localStorage.setItem(USER_KEY, JSON.stringify(user));
 }
 
-export function clearAuth() {
-  if (!isBrowser) return;
-  localStorage.removeItem(ACCESS_KEY);
-  localStorage.removeItem(REFRESH_KEY);
-  localStorage.removeItem(USER_KEY);
+export function clearStoredUser() {
+  if (isBrowser) localStorage.removeItem(USER_KEY);
 }

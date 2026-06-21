@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 import { Badge } from "@/src/components/ui";
 import { LinkButton } from "@/src/components/buttons";
 import { STATUS_TONE } from "@/src/constants";
-import type { Dashboard } from "@/src/lib/api/schemas";
+import type { Dashboard } from "@/src/lib/services/schemas";
 
 const fmt = (n: number, currency: string) =>
   new Intl.NumberFormat("en-US", {

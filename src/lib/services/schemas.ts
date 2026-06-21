@@ -13,12 +13,6 @@ export const userSchema = z.object({
 });
 export type User = z.infer<typeof userSchema>;
 
-export const authDataSchema = z.object({
-  accessToken: z.string(),
-  refreshToken: z.string().optional(),
-  user: userSchema,
-});
-
 export const systemRequirementsSchema = z.object({
   minimum: z.record(z.string(), z.string()).default({}),
   recommended: z.record(z.string(), z.string()).default({}),

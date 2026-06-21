@@ -1,9 +1,9 @@
 // The Game shape now comes from the API layer (zod-inferred), so the admin UI
 // and the backend stay in lockstep. This file keeps only the static taxonomy
 // and pure helpers the UI needs.
-import type { Game } from "@/src/lib/api/schemas";
+import type { Game } from "@/src/lib/services/schemas";
 
-export type { Game, SystemRequirements } from "@/src/lib/api/schemas";
+export type { Game, SystemRequirements } from "@/src/lib/services/schemas";
 
 // The fixed taxonomy the storefront's Browse page filters by. Surfaced as
 // quick-add chips when editing a game's tags.

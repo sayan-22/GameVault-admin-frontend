@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import * as gamesApi from "@/src/lib/api/games";
-import type { PriceUpdate } from "@/src/lib/api/games";
-import { apiError } from "@/src/lib/api/client";
-import type { Game } from "@/src/lib/api/schemas";
+import * as gamesApi from "@/src/lib/services/games";
+import type { PriceUpdate } from "@/src/lib/services/games";
+import { apiError } from "@/src/lib/services/authAxios";
+import type { Game } from "@/src/lib/services/schemas";
 
 type Status = "idle" | "loading" | "succeeded" | "failed";
 
